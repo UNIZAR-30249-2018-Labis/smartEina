@@ -1,0 +1,26 @@
+angular.module('smartEina', ['ui.router'])
+
+    .config(function ($stateProvider, $urlRouterProvider) {
+        $stateProvider
+
+            .state('login', {
+                url: "/login",
+                templateUrl: "templates/login.html",
+                controller: "loginCtrl"
+            })
+
+            .state('signup', {
+                url: "/signUp",
+                templateUrl: "templates/signup.html",
+                controller: "signUpCtrl"
+            })
+
+        //starter screen
+            .state('map', {
+                url: "/map",
+                templateUrl: "templates/map.html",
+                controller: "mapCtrl"
+            });
+
+        $urlRouterProvider.otherwise('login');
+    });
