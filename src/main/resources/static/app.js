@@ -15,7 +15,6 @@ angular.module('smartEina', ['ui.router'])
                 controller: "signUpCtrl"
             })
 
-        //starter screen
             .state('map', {
                 url: "/map",
                 templateUrl: "templates/map.html",
