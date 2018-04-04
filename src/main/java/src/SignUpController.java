@@ -40,7 +40,7 @@ public class SignUpController {
             if (userRepository.findByName(username) != null) {
                 return new ResponseEntity<String> ("\"El usuario ya existe.\"", HttpStatus.BAD_REQUEST);
             } else {
-                User user = new User(username, email, password, "basico", new Date(System.currentTimeMillis()));
+                User user = new User(username,password, email, "basico", new Date(System.currentTimeMillis()));
                 if (userRepository.addUser(user)) {
                     return new ResponseEntity<String> ("\"Usuario creado correctamente.\"", HttpStatus.CREATED);
                 } else return new ResponseEntity<String> ("\"Ha habido un error al crear el usuario.\"", HttpStatus.BAD_REQUEST);

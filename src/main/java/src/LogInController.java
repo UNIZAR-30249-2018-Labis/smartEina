@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import src.repository.UserRepository;
 import src.domain.User;
+import src.repository.UserRepositoryImplementation;
 
 @RestController
 public class LogInController {
@@ -33,10 +34,11 @@ public class LogInController {
             } else {
                 if (u.getPass().equals(password)) {
                     // Creamos la sesion o la mierda que sea
-
-                    return null;
+                    //TODO:esto
+                    //return null;
+                  return new ResponseEntity<String>("\"todo bien\"", HttpStatus.BAD_REQUEST);
                 } else {
-                    return new ResponseEntity<String>("\"Contraseña incorrecta \"", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<String>( " \"Contraseña incorrecta \" " + u.getPass(), HttpStatus.BAD_REQUEST);
                 }
             }
         }
