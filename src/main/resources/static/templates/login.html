@@ -5,15 +5,18 @@
             <h1 id="firstContent">Inicia sesion con tu cuenta de Smart EINA!</h1>
 
             <form role="form" ng-submit="logIn()">
+                <div ng-if="error" class="alert alert-danger feedbackMessages">
+                    <strong>&#10008</strong> {{errorMsg}}
+                </div>
                 <!-- user name input form -->
                 <div class="form-group">
-                    <input  type="text" ng-model="userName" class="form-control"
+                    <input  ng-click="hideError()" type="text" ng-model="userName" class="form-control"
                            placeholder="Correo electronico" required />
                 </div>
 
                 <!-- password input form-->
                 <div class="form-group">
-                    <input type="password" ng-model="password" class="form-control"
+                    <input ng-click="hideError()" type="password" ng-model="password" class="form-control"
                            placeholder="Contraseña" required />
                 </div>
 

@@ -69,6 +69,7 @@ angular.module('smartEina')
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).success(function (data) {
+                    $state.go('login');
                     callbackSuccess(data);
                 }).error(function (data) {
                     callbackError(data);

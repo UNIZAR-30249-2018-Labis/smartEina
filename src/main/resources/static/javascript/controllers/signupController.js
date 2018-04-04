@@ -10,7 +10,9 @@ angular.module('smartEina')
 
         // feedback handling variables
         $scope.errorMsg = "";
+        $scope.successMsg = "";
         $scope.error = false;
+        $scope.success = false;
 
         // hide the error login message when is true respectively
         $scope.hideError = function () {
@@ -23,6 +25,16 @@ angular.module('smartEina')
             $scope.errorMsg = error;
             $scope.error = true;
         };
+
+        $scope.hideSuccess = function () {
+            $scope.success = false;
+            $scope.successMsg = "";
+        }
+
+        var showSuccess = function(message) {
+            $scope.successMsg = message;
+            $scope.success = true;
+        }
 
         $scope.signUp = function () {
             // check if the both passwords match
