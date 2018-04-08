@@ -1,6 +1,8 @@
 angular.module('smartEina')
 
     .controller('signUpCtrl', ['$scope', '$state', 'auth', function ($scope, $state, auth) {
+        // Miramos si esta loggeado
+        auth.checkLogged();
 
         // inputs visual variables
         $scope.userName = "";
@@ -39,7 +41,7 @@ angular.module('smartEina')
         $scope.signUp = function () {
             // check if the both passwords match
             if ($scope.password !== $scope.rePassword) {
-                showError('Invalid passwords');
+                showError('Las dos contraseñas no coinciden.');
             } else {
                 var userObject = {
                     user: $scope.userName,

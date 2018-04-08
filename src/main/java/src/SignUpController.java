@@ -38,7 +38,9 @@ public class SignUpController {
         } else {
             // Miramos si el usuario existe
             if (userRepository.findByName(username) != null) {
-                return new ResponseEntity<String> ("\"El usuario ya existe.\"", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<String> ("\"El nombre de usuario ya existe.\"", HttpStatus.BAD_REQUEST);
+            } else if (userRepository.findByEmail(email) != null) {
+                return new ResponseEntity<String> ("\"El email introducido ya esta asociado a un usuario existente.\"", HttpStatus.BAD_REQUEST);
             } else {
                 User user = new User(username,password, email, "basico", new Date(System.currentTimeMillis()));
                 if (userRepository.addUser(user)) {

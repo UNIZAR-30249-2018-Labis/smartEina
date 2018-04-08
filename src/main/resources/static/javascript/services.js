@@ -28,6 +28,21 @@ angular.module('smartEina')
                 localStorage.sessionJWT = angular.toJson(session);
             },
 
+            // Funcion que checkea las redirecciones al entrar a una pagina (state) nueva
+            checkLogged: function () {
+                if (!this.isAuthenticated()) {
+                    if ($state.is('login')) {}
+                    else if ($state.is('signup')){}
+                    else $state.go('login')
+                } else {
+                    if ($state.is('login')) {
+                        $state.go('map')
+                    } else if ($state.is('signup')) {
+                        $state.go('map')
+                    }
+                }
+            },
+
             getSession: function () {
                 return session;
             },

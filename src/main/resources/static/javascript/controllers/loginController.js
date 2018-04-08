@@ -1,6 +1,8 @@
 angular.module('smartEina')
 
     .controller('loginCtrl', ['$scope', '$state', 'auth', function ($scope, $state, auth) {
+        // Miramos si esta loggeado
+        auth.checkLogged();
 
         // inputs visual variables
         $scope.userName = "";

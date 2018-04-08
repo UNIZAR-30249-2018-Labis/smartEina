@@ -12,9 +12,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/starter" rel="home" id="hombeButton">
+            <a class="navbar-brand" href="" rel="home" id="hombeButton">
                 Smart EINA
             </a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavBar" style="color:white;">
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-if="logged()" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</li>
+            </ul>
         </div>
     </div>
 </nav>
