@@ -3,7 +3,9 @@ angular.module('smartEina')
 // 'auth' service manage the authentication function of the page with the server
     .factory('auth', function ($state, $http, $httpParamSerializer) {
         var session = undefined,
-            _authenticated = false;
+            _authenticated = false,
+            loggedUsername ="",
+            loggedType="";
 
         return {
             //return true if the user is authenticated
@@ -47,10 +49,20 @@ angular.module('smartEina')
                 return session;
             },
 
+            getLoggedUsername: function () {
+                return loggedUsername;
+            },
+
+            getLoggedType: function () {
+                return loggedType;
+            },
+
             //logout function
             logout: function () {
                 session = undefined;
                 _authenticated = false;
+                loggedUsername = "";
+                loggedType = "";
                 localStorage.removeItem("sessionJWT");
                 $state.go('login');
             },
@@ -67,8 +79,15 @@ angular.module('smartEina')
                     }
                 }).success(function (data, status, headers) {
                     that.authenticate(headers().authorization);
-                    $state.go('map');
-
+                    loggedUsername = headers().username;
+                    loggedType = headers().type;
+                    if (loggedType == 'Administrador') {
+                        // Vamos a la pantalla mapa de admin
+                    } else if (loggedType == 'Mantenimiento') {
+                        // Vamos al mapa de mantenimiento
+                    } else {
+                        $state.go('map');
+                    }
                 }).error(function (data) {
                     callback(data);
                 });

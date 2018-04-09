@@ -29,11 +29,11 @@ public class LogInController {
         String password = request.getHeader("pass");
 
         if (username == null || password == null) {
-            return new ResponseEntity<String>("\"Usuario o contraseña nulo \"", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("\"Usuario o contraseña nulo. \"", HttpStatus.BAD_REQUEST);
         } else {
             User u = userRepository.findByName(username);
             if (u == null) {
-                return new ResponseEntity<String>("\"El usuario no existe \"", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<String>("\"El usuario no existe. \"", HttpStatus.BAD_REQUEST);
             } else {
                 if (u.getPass().equals(password)) {
                     // Creamos la sesion o la mierda que sea
@@ -43,9 +43,11 @@ public class LogInController {
 
                     HttpHeaders headers = new HttpHeaders();
                     headers.add("Authorization", builder.compact());
+                    headers.add("Username", username);
+                    headers.add("Type", u.getType());
                   return new ResponseEntity<String>("\"Exito en el login.\"",headers, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<String>( " \"Contraseña incorrecta \" " + u.getPass(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<String>("\"Contraseña incorrecta.\"", HttpStatus.BAD_REQUEST);
                 }
             }
         }

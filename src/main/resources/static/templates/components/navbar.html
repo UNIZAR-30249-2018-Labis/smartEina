@@ -17,7 +17,12 @@
             </a>
         </div>
         <div class="collapse navbar-collapse" id="myNavBar" style="color:white;">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-left">
+                <li ng-if="logged() && notBasic()"><a style="color: #FFFFFF;"> {{ getType() }} <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                <li ng-if="logged()"><a style="color: #FFFFFF;"><span class="glyphicon glyphicon-user"></span> {{ getUsername() }}</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" style="margin-top: 20px">
                 <li ng-if="logged()" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</li>
             </ul>
         </div>
