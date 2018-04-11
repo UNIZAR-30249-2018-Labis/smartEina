@@ -1,1 +1,2 @@
 # smartEina
+Web application.
