@@ -9,6 +9,31 @@ public class EspacioEntity {
     private String tipoDeUso;
     private Boolean exterior;
     private int planta;
+
+    public ArrayList<HorarioOV> getHorario() {
+        return horario;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getEdificio() {
+        return edificio;
+    }
+
+    public String getTipoDeUso() {
+        return tipoDeUso;
+    }
+
+    public int getPlanta() {
+        return planta;
+    }
+
     private ArrayList<HorarioOV> horario;
 
     public EspacioEntity (String id, String nombre, String edificio, String tipoDeUso, Boolean exterior, int planta, ArrayList<HorarioOV> horario) {
@@ -21,7 +46,10 @@ public class EspacioEntity {
         this.horario = horario;
     }
 
+
     public ArrayList<HorarioOV> devolverHorario() {
         return horario;
     }
+
+
 }
