@@ -114,8 +114,26 @@ angular.module('smartEina')
 
     // Llamadas de la pantalla MAP
     .factory('map', function ($state, $http, $httpParamSerializer) {
-       return {
+        //Falta declarar variables??
+        var id = "CRE.1065.00.02";
 
+
+      return {
+      getInfo: function (callbackSuccess, callbackError) {
+        $http({
+          method: 'GET',
+          url: '/getInfo',
+          data: $httpParamSerializer({'id' : "CRE.1065.00.02"}),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).success(function (data) {
+          //No se va a ningun sitio? $state.go('login');
+          callbackSuccess(data);
+        }).error(function (data) {
+          callbackError(data);
+        });
+      }
        }
     });
 
