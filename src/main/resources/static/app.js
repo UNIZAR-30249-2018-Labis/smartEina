@@ -1,4 +1,4 @@
-angular.module('smartEina', ['ui.router'])
+angular.module('smartEina', ['ui.router' , 'leaflet-directive'])
 
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider

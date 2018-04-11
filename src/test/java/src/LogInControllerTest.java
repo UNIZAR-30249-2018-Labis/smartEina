@@ -10,6 +10,9 @@ import src.repository.UserRepository;
 
 import java.sql.Date;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
+
 public class LogInControllerTest {
 
     @Autowired
