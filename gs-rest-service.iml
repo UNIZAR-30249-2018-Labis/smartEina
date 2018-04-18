@@ -25,6 +25,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.simpleflatmapper:sfm-springjdbc:3.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.simpleflatmapper:sfm-jdbc:3.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.simpleflatmapper:sfm-map:3.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.simpleflatmapper:sfm-reflect:3.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.simpleflatmapper:sfm-util:3.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.simpleflatmapper:sfm-converter:3.17.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.0.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.0.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.0.0.RELEASE" level="project" />
