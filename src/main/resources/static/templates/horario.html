@@ -1,8 +1,16 @@
-<div class="container-fluid">
+<div class="modal-content">
     <div class="modal-header">
-        <h2 class="modal-title"> Horario Sala {{data.idSelected}}</h2>
+        <div class="row">
+            <div class="col-10">
+                <h2 class="modal-title"> Horario de la sala: {{nombreSelected}}</h2>
+                <h3>ID: {{idSelected}}</h3>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" ng-click="close()">Volver</button>
+            </div>
+        </div>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="width: 100%; height: 100%">
         <ul class="nav nav-tabs">
             <li class="active noround">
                 <a data-toggle="pill" href="#lunes">Lunes</a>
@@ -26,151 +34,78 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr class="table-head">
-                        <th class="col-md-2">Hora</th>
-                        <th class="col-md-9">Actividad</th>
-                        <th class="col-md-1">Acciones</th>
+                        <th ng-if="!isAdmin()" class="col-md-3">Hora</th>
+                        <th ng-if="!isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-2">Hora</th>
+                        <th ng-if="isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-1">Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr id="l8">
                         <th scope="row">8:00 - 9:00</th>
-                        <td>Algoritmica grafurilor</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Eliminar
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',8)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',8)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l9">
                         <th scope="row">9:00 - 10:00</th>
-                        <td>
-                            <div class="form-group ">
-                                <input type="text" class="form-control"
-                                       placeholder="Con javascript mostrar esto al darle a 'Nueva'">
-                            </div>
-
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-success">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                Añadir
-                            </button>
-                        </td>
+                        <td>{{showActividad('Lunes',9)}}</td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',9)" class="btn btn-primary">Editar</button></td>
                     </tr>
-
-                    <tr>
+                    <tr id="l10">
                         <th scope="row">10:00 - 11:00</th>
-                        <td>Limbaje formale, automate si compilatoare</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Eliminar
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',10)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',10)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l11">
                         <th scope="row">11:00 - 12:00</th>
-                        <td>Limbaje formale, automate si compilatoare</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Eliminar
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',11)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',11)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l12">
                         <th scope="row">12:00 - 13:00</th>
-                        <td>Limbaje formale, automate si compilatoare</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Eliminar
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',12)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',12)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l13">
                         <th scope="row">13:00 - 14:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',13)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',13)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l14">
                         <th scope="row">14:00 - 15:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',14)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',14)" class="btn btn-primary">Editar</button></td>
                     </tr>
-
-
-                    <tr>
+                    <tr id="l15">
                         <th scope="row">15:00 - 16:00</th>
-
-                        <td>Algoritmica grafurilor</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Eliminar
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',15)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',15)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l16">
                         <th scope="row">16:00 - 17:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',16)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',16)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l17">
                         <th scope="row">17:00 - 18:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',17)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',17)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l18">
                         <th scope="row">18:00 - 19:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',18)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',18)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l19">
                         <th scope="row">19:00 - 20:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',19)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',19)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="l20" >
                         <th scope="row">20:00 - 21:00</th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td> {{showActividad('Lunes',20)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Lunes',20)" class="btn btn-primary">Editar</button></td>
                     </tr>
                     </tbody>
                 </table>
@@ -180,40 +115,79 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr class="table-head">
-                        <th class="col-md-2">Hora</th>
-                        <th class="col-md-9">Actividad</th>
-                        <th class="col-md-1">Acciones</th>
+                        <th ng-if="!isAdmin()" class="col-md-3">Hora</th>
+                        <th ng-if="!isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-2">Hora</th>
+                        <th ng-if="isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-1">Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr id="m8">
                         <th scope="row">8:00 - 9:00</th>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control"
-                                       placeholder="Introduce el nombre de la actividad">
-                            </div>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-success">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                Añadir
-                            </button>
-                        </td>
+                        <td> {{showActividad('Martes',8)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',8)" class="btn btn-primary">Editar</button></td>
                     </tr>
-                    <tr>
+                    <tr id="m9">
                         <th scope="row">9:00 - 10:00</th>
-                        <td>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Nueva
-                            </button>
-                        </td>
+                        <td>{{showActividad('Martes',9)}}</td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',9)" class="btn btn-primary">Editar</button></td>
                     </tr>
-
-
+                    <tr id="m10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{showActividad('Martes',10)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',10)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{showActividad('Martes',11)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',11)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{showActividad('Martes',12)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',12)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{showActividad('Martes',13)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',13)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{showActividad('Martes',14)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',14)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{showActividad('Martes',15)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',15)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{showActividad('Martes',16)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',16)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{showActividad('Martes',17)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',17)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{showActividad('Martes',18)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',18)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{showActividad('Martes',19)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',19)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="m20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{showActividad('Martes',20)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Martes',20)" class="btn btn-primary">Editar</button></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -222,23 +196,78 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr class="table-head">
-                        <th class="col-md-2">Hora de inicio</th>
-                        <th class="col-md-2">Hora de fin</th>
-                        <th class="col-md-7">Actividad</th>
-                        <th class="col-md-1">Acciones</th>
+                        <th ng-if="!isAdmin()" class="col-md-3">Hora</th>
+                        <th ng-if="!isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-2">Hora</th>
+                        <th ng-if="isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-1">Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">15:00</th>
-                        <td>16:00</td>
-                        <td>Algoritmica grafurilor</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Eliminar
-                            </button>
-                        </td>
+                    <tr id="x8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{showActividad('Miercoles',8)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',8)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td>{{showActividad('Miercoles',9)}}</td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',9)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{showActividad('Miercoles',10)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',10)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{showActividad('Miercoles',11)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',11)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{showActividad('Miercoles',12)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',12)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{showActividad('Miercoles',13)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',13)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{showActividad('Miercoles',14)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',14)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{showActividad('Miercoles',15)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',15)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{showActividad('Miercoles',16)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',16)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{showActividad('Miercoles',17)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',17)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{showActividad('Miercoles',18)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',18)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{showActividad('Miercoles',19)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',19)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="x20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{showActividad('Miercoles',20)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Miercoles',20)" class="btn btn-primary">Editar</button></td>
                     </tr>
                     </tbody>
                 </table>
@@ -248,14 +277,79 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr class="table-head">
-                        <th class="col-md-2">Hora de inicio</th>
-                        <th class="col-md-2">Hora de fin</th>
-                        <th class="col-md-7">Actividad</th>
-                        <th class="col-md-1">Acciones</th>
+                        <th ng-if="!isAdmin()" class="col-md-3">Hora</th>
+                        <th ng-if="!isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-2">Hora</th>
+                        <th ng-if="isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-1">Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    <tr id="j8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{showActividad('Jueves',8)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',8)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td>{{showActividad('Jueves',9)}}</td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',9)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{showActividad('Jueves',10)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',10)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{showActividad('Jueves',11)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',11)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{showActividad('Jueves',12)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',12)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{showActividad('Jueves',13)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',13)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{showActividad('Jueves',14)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',14)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{showActividad('Jueves',15)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',15)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{showActividad('Jueves',16)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',16)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{showActividad('Jueves',17)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',17)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{showActividad('Jueves',18)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',18)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{showActividad('Jueves',19)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',19)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="j20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{showActividad('Jueves',20)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Jueves',20)" class="btn btn-primary">Editar</button></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -264,27 +358,85 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr class="table-head">
-                        <th class="col-md-2">Hora de inicio</th>
-                        <th class="col-md-2">Hora de fin</th>
-                        <th class="col-md-7">Actividad</th>
-                        <th class="col-md-1">Acciones</th>
+                        <th ng-if="!isAdmin()" class="col-md-3">Hora</th>
+                        <th ng-if="!isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-2">Hora</th>
+                        <th ng-if="isAdmin()" class="col-md-9">Actividad</th>
+                        <th ng-if="isAdmin()" class="col-md-1">Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    <tr id="v8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{showActividad('Viernes',8)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',8)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td>{{showActividad('Viernes',9)}}</td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',9)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{showActividad('Viernes',10)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',10)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{showActividad('Viernes',11)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',11)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{showActividad('Viernes',12)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',12)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{showActividad('Viernes',13)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',13)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{showActividad('Viernes',14)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',14)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{showActividad('Viernes',15)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',15)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{showActividad('Viernes',16)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',16)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{showActividad('Viernes',17)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',17)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{showActividad('Viernes',18)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',18)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{showActividad('Viernes',19)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',19)" class="btn btn-primary">Editar</button></td>
+                    </tr>
+                    <tr id="v20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{showActividad('Viernes',20)}} </td>
+                        <td ng-if="isAdmin()"><button ng-click="editar('Viernes',20)" class="btn btn-primary">Editar</button></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" ng-disabled="form.userForm.$invalid">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
     </div>
 </div>
-
-
-
 
 
 

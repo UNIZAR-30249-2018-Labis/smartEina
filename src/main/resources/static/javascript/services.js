@@ -82,7 +82,7 @@ angular.module('smartEina')
                     loggedUsername = headers().username;
                     loggedType = headers().type;
                     if (loggedType == 'Administrador') {
-                        // Vamos a la pantalla mapa de admin
+                        $state.go('map');
                     } else if (loggedType == 'Mantenimiento') {
                         // Vamos al mapa de mantenimiento
                     } else {
@@ -115,58 +115,73 @@ angular.module('smartEina')
     // Llamadas de la pantalla MAP
     .factory('map', function ($state, $http, $httpParamSerializer) {
         return {
-          // Peticion al servidor nuestro con el id de la sala para obtener informacion de la misma
-          getInfo: function (id, callbackSucces, callbackError) {
-            $http({
-              method: 'GET',
-              url: '/espacios',
-              headers: {
-                  'id': id
-              }
-            }).success(function (data, status, headers) {
-                callbackSucces(JSON.parse(headers().espacio));
-            }).error(function (data) {
-                callbackError
-            });
-          },
+            guardarHora: function (datos, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/guardarHora',
+                    params: datos
+                }).success(function(data) {
+                    console.log("Exito");
+                    callBack()
+                }).error(function(data) {
+                    console.log("Fallo");
+                    callBack()
+                });
+            },
 
-          crearCapa: function (nombreLeyenda, nombreCapa) {
-              return {
-                  name: nombreLeyenda,
-                  type: 'wms',
-                  visible: true,
-                  url: 'http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/wms',
-                  tiled: true,
-                  layerParams: {
-                      layers: nombreCapa,
-                      format: 'image/png',
-                      transparent: true,
-                      "showOnSelector": false
-                  },
-                  layerOptions: {
-                      attribution: "",
-                  }
-              }
-          },
+            getInfo: function (id, callbackSucces, callbackError) {
+                $http({
+                    method: 'GET',
+                    url: '/espacios',
+                    headers: {
+                        'id': id
+                    }
+                }).success(function (data, status, headers) {
+                    callbackSucces(JSON.parse(headers().espacio));
+                }).error(function (data) {
+                    callbackError
+                });
+            },
 
-          obtenerId: function (nombreCapa, lat, lng) {
-              console.log("Estamos padentro")
-              var url = "http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/ows?service" +
-                      "=WFS&VERSION=1.3.0&request=GetFeature&typeName=" + nombreCapa + "&outputFormat=application%2Fjson&CQL_FILTER=" +
-                  "CONTAINS(geom,%20Point(" + lng + "%20" + lat + "))&propertyName=id_espacio";
+            crearCapa: function (nombreLeyenda, nombreCapa) {
+                return {
+                    name: nombreLeyenda,
+                    type: 'wms',
+                    visible: true,
+                    url: 'http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/wms',
+                    tiled: true,
+                    layerParams: {
+                        layers: nombreCapa,
+                        format: 'image/png',
+                        transparent: true,
+                        "showOnSelector": false
+                    },
+                    layerOptions: {
+                        attribution: "",
+                    }
+                }
+            },
 
-              return $http.get(url).then(function (response) {
-                  var r = response.data.features;
-                  console.log("Devuelve " + r);
+            obtenerId: function (nombreCapa, lat, lng) {
+                var url = "http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/wfs?service" +
+                    "=WFS&VERSION=1.0.0&request=GetFeature&typeName=" + nombreCapa + "&outputFormat=application%2Fjson&CQL_FILTER=" +
+                    "CONTAINS(the_geom,%20Point(" + lng + "%20" + lat + "))&propertyName=ID_UTC&propertyName=ID_EDIFICI";
 
-                  if (r === undefined || r[0] === undefined) {
-                      return undefined;
-                  } else {
-                      var idEspacio = r[0].properties.id_espacio;
-                      return idEspacio;
-                  }
-              })
-          }
-      }
+                return $http.get(url).then(function (response) {
+                    var r = response.data.features;
+
+                    if (r === undefined || r[0] === undefined) {
+                        return undefined;
+                    } else {
+                        console.log("UTC: " + r[0]['properties'].ID_UTC);
+                        console.log("EDI: " + r[0]['properties'].ID_EDIFICI);
+
+                        return r[0]['properties'].ID_EDIFICI + "." + r[0]['properties'].ID_UTC;
+                    }
+                }, function () {
+                    return undefined;
+                });
+            }
+        }
     });
 

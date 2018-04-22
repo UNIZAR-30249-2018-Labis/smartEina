@@ -5,13 +5,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import src.application.Application;
 import src.domain.User;
 import src.domain.UserRepository;
 
 import java.sql.Date;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes={Application.class})
 
 public class LogInControllerTest {
 

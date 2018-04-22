@@ -1,0 +1,13 @@
+<div>
+    <div class="form-group">
+        <label for="espacio">Espacio:</label>
+        <input ng-readonly="true" type="text" class="form-control" id="espacio" value="{{idEspacio}}">
+        <label for="dia">Dia:</label>
+        <input ng-readonly="true" type="text" class="form-control" id="dia" value="{{dia}}">
+        <label for="hora">Hora de inicio:</label>
+        <input ng-readonly="true" type="text" class="form-control" id="hora" value="{{hora}}">
+        <label for="actividad">Actividad:</label>
+        <input type="text" class="form-control" id="actividad" ng-model="actividad">
+    </div>
+    <button ng-click="guardar()" class="btn btn-primary">Guardar</button>
+</div>
