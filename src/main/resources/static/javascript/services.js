@@ -114,26 +114,59 @@ angular.module('smartEina')
 
     // Llamadas de la pantalla MAP
     .factory('map', function ($state, $http, $httpParamSerializer) {
-        //Falta declarar variables??
-        var id = "CRE.1065.00.02";
+        return {
+          // Peticion al servidor nuestro con el id de la sala para obtener informacion de la misma
+          getInfo: function (id, callbackSucces, callbackError) {
+            $http({
+              method: 'GET',
+              url: '/espacios',
+              headers: {
+                  'id': id
+              }
+            }).success(function (data, status, headers) {
+                callbackSucces(JSON.parse(headers().espacio));
+            }).error(function (data) {
+                callbackError
+            });
+          },
 
+          crearCapa: function (nombreLeyenda, nombreCapa) {
+              return {
+                  name: nombreLeyenda,
+                  type: 'wms',
+                  visible: true,
+                  url: 'http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/wms',
+                  tiled: true,
+                  layerParams: {
+                      layers: nombreCapa,
+                      format: 'image/png',
+                      transparent: true,
+                      "showOnSelector": false
+                  },
+                  layerOptions: {
+                      attribution: "",
+                  }
+              }
+          },
 
-      return {
-      getInfo: function (callbackSuccess, callbackError) {
-        $http({
-          method: 'GET',
-          url: '/getInfo',
-          data: $httpParamSerializer({'id' : "CRE.1065.00.02"}),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+          obtenerId: function (nombreCapa, lat, lng) {
+              console.log("Estamos padentro")
+              var url = "http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/ows?service" +
+                      "=WFS&VERSION=1.3.0&request=GetFeature&typeName=" + nombreCapa + "&outputFormat=application%2Fjson&CQL_FILTER=" +
+                  "CONTAINS(geom,%20Point(" + lng + "%20" + lat + "))&propertyName=id_espacio";
+
+              return $http.get(url).then(function (response) {
+                  var r = response.data.features;
+                  console.log("Devuelve " + r);
+
+                  if (r === undefined || r[0] === undefined) {
+                      return undefined;
+                  } else {
+                      var idEspacio = r[0].properties.id_espacio;
+                      return idEspacio;
+                  }
+              })
           }
-        }).success(function (data) {
-          //No se va a ningun sitio? $state.go('login');
-          callbackSuccess(data);
-        }).error(function (data) {
-          callbackError(data);
-        });
       }
-       }
     });
 

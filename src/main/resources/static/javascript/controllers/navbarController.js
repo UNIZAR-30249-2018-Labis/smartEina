@@ -4,12 +4,10 @@ angular.module('smartEina')
     .controller('navbarCtrl', ['$scope', '$state', 'auth', function ($scope, $state, auth) {
 
         $scope.getUsername = function () {
-            console.log(auth.getLoggedUsername())
             return auth.getLoggedUsername();
         };
 
         $scope.getType = function () {
-            console.log(auth.getLoggedType())
             return auth.getLoggedType();
         };
 

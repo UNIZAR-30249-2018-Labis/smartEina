@@ -1,4 +1,4 @@
-package src;
+package src.application.controllers;
 
 
 import io.jsonwebtoken.Claims;
@@ -11,11 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import src.repository.UserRepository;
+import src.domain.UserRepository;
 import src.domain.User;
-import src.repository.UserRepositoryImplementation;
 
 @RestController
 public class LogInController {

@@ -1,8 +1,6 @@
-package src;
+package src.application.controllers;
 
 import java.sql.Date;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import src.domain.User;
-import src.repository.UserRepository;
+import src.domain.UserRepository;
 
 @RestController
 public class SignUpController {
@@ -42,7 +40,7 @@ public class SignUpController {
             } else if (userRepository.findByEmail(email) != null) {
                 return new ResponseEntity<String> ("\"El email introducido ya esta asociado a un usuario existente.\"", HttpStatus.BAD_REQUEST);
             } else {
-                User user = new User(username,password, email, "basico", new Date(System.currentTimeMillis()));
+                User user = new User(username,password, email, "Basico", new Date(System.currentTimeMillis()));
                 if (userRepository.addUser(user)) {
                     return new ResponseEntity<String> ("\"Usuario creado correctamente.\"", HttpStatus.CREATED);
                 } else return new ResponseEntity<String> ("\"Ha habido un error al crear el usuario.\"", HttpStatus.BAD_REQUEST);
