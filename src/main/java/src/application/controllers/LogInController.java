@@ -19,7 +19,7 @@ import src.domain.User;
 public class LogInController {
 
     @Autowired
-    protected UserRepository userRepository;
+    UserRepository userRepository;
 
     @RequestMapping(value = "/logIn", method = RequestMethod.GET)
     public ResponseEntity<String> logIn(HttpServletRequest request) {
