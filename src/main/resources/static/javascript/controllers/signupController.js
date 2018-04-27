@@ -38,6 +38,10 @@ angular.module('smartEina')
             $scope.success = true;
         }
 
+        $scope.volverALogIn = function() {
+            $state.go('login')
+        }
+
         $scope.signUp = function () {
             // check if the both passwords match
             if ($scope.password !== $scope.rePassword) {

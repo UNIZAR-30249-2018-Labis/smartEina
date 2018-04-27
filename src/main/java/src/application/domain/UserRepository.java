@@ -1,6 +1,4 @@
-package src.domain;
-
-import src.domain.User;
+package src.application.domain;
 
 public interface UserRepository {
 

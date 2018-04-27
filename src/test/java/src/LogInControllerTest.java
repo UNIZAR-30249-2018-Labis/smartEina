@@ -5,8 +5,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import src.domain.User;
-import src.domain.UserRepository;
+import src.application.domain.User;
+import src.application.domain.UserRepository;
 
 import java.sql.Date;
 

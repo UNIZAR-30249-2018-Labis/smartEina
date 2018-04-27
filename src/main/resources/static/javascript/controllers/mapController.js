@@ -35,8 +35,8 @@ angular.module('smartEina')
 
         angular.extend($scope, {
             cps: {
-              lat : 41.684106,
-              lng :-0.887497,
+                lat: 41.684106,
+                lng: -0.887497,
                 zoom: 19
             },
             events: {
@@ -64,7 +64,7 @@ angular.module('smartEina')
             }
         });
 
-        $scope.$on('leafletDirectiveMap.click', function(event, args) {
+        $scope.$on('leafletDirectiveMap.click', function (event, args) {
             var leafEvent = args.leafletEvent;
             var latitude = leafEvent.latlng.lat;
             var longitude = leafEvent.latlng.lng;
@@ -98,13 +98,13 @@ angular.module('smartEina')
             $scope.horario = espacio.horario;
         };
 
-        $scope.addMarker = function(latitude, longitude) {
+        $scope.addMarker = function (latitude, longitude) {
             $scope.clearMarkers();
-            angular.extend($scope.data, { idSelected: "Cargando..."});
-            angular.extend($scope.data, { nombreSelected: "Cargando..."});
-            angular.extend($scope.data, { edificioSelected: "Cargando..."});
-            angular.extend($scope.data, { plantaSelected: "Cargando..."});
-            angular.extend($scope.data, { usoSelected: "Cargando..."});
+            angular.extend($scope.data, {idSelected: "Cargando..."});
+            angular.extend($scope.data, {nombreSelected: "Cargando..."});
+            angular.extend($scope.data, {edificioSelected: "Cargando..."});
+            angular.extend($scope.data, {plantaSelected: "Cargando..."});
+            angular.extend($scope.data, {usoSelected: "Cargando..."});
 
             angular.extend($scope.data, {
                 markers: {
@@ -112,7 +112,9 @@ angular.module('smartEina')
                         lat: latitude,
                         lng: longitude,
                         focus: true,
-                        getMessageScope: function () { return $scope; },
+                        getMessageScope: function () {
+                            return $scope;
+                        },
                         message: "<div class='container-fluid'>" +
                         "<div class='row'><p><strong>Identificiador:</strong></p><p> {{data.idSelected}} </p></div>" +
                         "<div class='row'><p><strong>Nombre:</strong></p><p> {{data.nombreSelected}} </p></div>" +
@@ -131,7 +133,7 @@ angular.module('smartEina')
             $scope.data.markers = {};
         };
 
-        $scope.subirPlanta = function() {
+        $scope.subirPlanta = function () {
             $scope.clearMarkers();
             switch (plantaActual) {
                 case -1:
@@ -164,15 +166,17 @@ angular.module('smartEina')
                     $scope.layers.overlays.active = $scope.definedOverlays.planta4;
                     $scope.layers.overlays.active.doRefresh = true;
                     break;
-                case 4:break;
+                case 4:
+                    break;
             }
             $scope.layers.overlays.active.doRefresh = true;
         };
 
-        $scope.bajarPlanta = function() {
+        $scope.bajarPlanta = function () {
             $scope.clearMarkers();
             switch (plantaActual) {
-                case -1: break;
+                case -1:
+                    break;
                 case 0:
                     //delete $scope.layers.overlays.planta0;
                     plantaActual = -1;
@@ -198,7 +202,7 @@ angular.module('smartEina')
                     $scope.layers.overlays.active.doRefresh = true;
                     break;
                 case 4:
-                   //delete $scope.layers.overlays.planta4;
+                    //delete $scope.layers.overlays.planta4;
                     plantaActual = 3;
                     $scope.layers.overlays.active = $scope.definedOverlays.planta3;
                     $scope.layers.overlays.active.doRefresh = true;
@@ -206,16 +210,18 @@ angular.module('smartEina')
             }
         };
 
-        $scope.verHorario = function() {
-            $uibModal.open({
+        $scope.verHorario = function () {
+            var modalHorario = $uibModal.open({
                 templateUrl: 'templates/horario.html',
-                windowClass: 'center-modal',
+                animation: true,
+                windowClass: 'modal',
                 keyboard: false,
+                controller: 'modalHorarioCtrl',
                 resolve: {
-                    horarios: function() {
+                    horarios: function () {
                         return $scope.horario
                     },
-                    idSelected: function() {
+                    idSelected: function () {
                         return $scope.data.idSelected
                     },
                     nombreSelected: function () {
@@ -226,129 +232,211 @@ angular.module('smartEina')
                     },
                     map: function () {
                         return map
-                    }
-                },
-                controller: function ($scope, $uibModalInstance, horarios, idSelected, nombreSelected, userType, map) {
-                    $scope.idSelected = idSelected
-                    $scope.nombreSelected = nombreSelected
-                    $scope.userType = userType
-                    $scope.horarios = horarios
-
-                    $scope.horasLunes = $scope.horarios.horasLunes;
-                    $scope.horasMartes = $scope.horarios.horasMartes;
-                    $scope.horasMiercoles= $scope.horarios.horasMiercoles;
-                    $scope.horasJueves = $scope.horarios.horasJueves;
-                    $scope.horasViernes = $scope.horarios.horasViernes;
-                    $scope.horasCheckear = null;
-
-                    $scope.isAdmin = function() {
-                      if ($scope.userType == "Administrador") return true;
-                        else return false;
-                    };
-
-                    var getInfoError = function() {};
-
-                    var getInfoSuccess = function (espacio) {
-                        var elementoActualizar = "";
-                        switch($scope.diaActualizar) {
-                            case "Lunes": elementoActualizar = 'l' +  $scope.horaActualizar; break;
-                            case "Martes": elementoActualizar = 'm' +  $scope.horaActualizar; break;
-                            case "Miercoles":elementoActualizar = 'x' +  $scope.horaActualizar; break;
-                            case "Jueves": elementoActualizar = 'j' +  $scope.horaActualizar; break;
-                            case "Viernes":elementoActualizar = 'v' +  $scope.horaActualizar;  break;
-                        }
-                        console.log("Success: " + elementoActualizar);
-                        $scope.horarios = espacio.horario;
-
-                        // TODO: pendiente de hacer la actualizacion instantanea de la GUI
-                    };
-
-                    $scope.diaActualizar = "";
-                    $scope.horaActualizar = "";
-
-                    $scope.actualizar = function(dia, hora) {
-                        $scope.diaActualizar = dia;
-                        $scope.horaActualizar = hora;
-                        map.getInfo($scope.idSelected, getInfoSuccess, getInfoError);
-                    };
-
-                    $scope.editar = function(dia, hora) {
-                        $scope.verEditar(dia,hora,$scope.showActividad(dia, hora),$scope.idSelected, map)
-                    };
-
-                    $scope.showActividad = function(dia, hora) {
-                        switch(dia) {
-                            case "Lunes": $scope.horasCheckear = $scope.horasLunes; break;
-                            case "Martes": $scope.horasCheckear = $scope.horasMartes; break;
-                            case "Miercoles": $scope.horasCheckear = $scope.horasMiercoles; break;
-                            case "Jueves": $scope.horasCheckear = $scope.horasJueves; break;
-                            case "Viernes": $scope.horasCheckear = $scope.horasViernes; break;
-                        }
-
-                        for (var i=0; i< $scope.horasCheckear.length; i++) {
-                            if ($scope.horasCheckear[i].horaDeInicio == hora) {
-                                return $scope.horasCheckear[i].actividad;
-                            }
-                        }
-                        return "";
-
-                    };
-
-                    $scope.close = function () {
-                        $uibModalInstance.close();
-                    };
-
-                    $scope.verEditar = function(dia, hora, actividad, idEspacio,map) {
-                        var modalEditar = $uibModal.open({
-                            templateUrl: 'templates/editarHorario.html',
-                            windowClass: 'center-modal',
-                            keyboard: false,
-                            resolve: {
-                                data: function () {
-                                    return {
-                                        dia: dia,
-                                        hora: hora,
-                                        actividad: actividad,
-                                        idEspacio: idEspacio,
-                                        map: map
-                                    }
-                                }
-                            },
-                            controller: function ($scope, $uibModalInstance, data) {
-                                $scope.dia = data.dia;
-                                $scope.hora = data.hora;
-                                $scope.actividad = data.actividad;
-                                $scope.idEspacio = data.idEspacio;
-
-                                var map = data.map;
-
-                                var close = function () {
-                                    var devolucion = {
-                                        dia: $scope.dia,
-                                        hora: $scope.hora
-                                    };
-
-                                    $uibModalInstance.close(devolucion);
-                                };
-
-                                $scope.guardar = function() {
-                                    console.log("Actividad a guardar: " + $scope.actividad)
-                                    var datos = {
-                                        idEspacio: $scope.idEspacio,
-                                        dia: $scope.dia,
-                                        hora: $scope.hora,
-                                        actividad: $scope.actividad
-                                    };
-                                    map.guardarHora(datos, close)
-                                };
-                            }
-                        });
-
-                        modalEditar.result.then(function (devolucion) {
-                            $scope.actualizar(devolucion.dia, devolucion.hora);
-                        });
+                    },
+                    uibModal: function () {
+                        return $uibModal
                     }
                 }
+            });
+
+            modalHorario.result.then(function () {
+
             })
         }
-    }]);
+    }])
+
+    .controller('modalHorarioCtrl', function ($scope, $uibModalInstance, horarios, idSelected, nombreSelected, userType, map, uibModal) {
+        $scope.idSelected = idSelected;
+        $scope.nombreSelected = nombreSelected;
+        $scope.userType = userType;
+        $scope.horarios = horarios;
+        $scope.uibModal = uibModal;
+
+        $scope.horasLunes = $scope.horarios.horasLunes;
+        $scope.horasMartes = $scope.horarios.horasMartes;
+        $scope.horasMiercoles= $scope.horarios.horasMiercoles;
+        $scope.horasJueves = $scope.horarios.horasJueves;
+        $scope.horasViernes = $scope.horarios.horasViernes;
+        $scope.horasCheckear = null;
+
+        $scope.actividadesLunes =[];
+        $scope.actividadesMartes = [];
+        $scope.actividadesMiercoles = [];
+        $scope.actividadesJueves = [];
+        $scope.actividadesViernes = [];
+
+        var loadData = function () {
+            for (var i = 0; i< 13; i++) {
+                $scope.actividadesLunes.push("");
+                $scope.actividadesMartes.push("");
+                $scope.actividadesMiercoles.push("");
+                $scope.actividadesJueves.push("");
+                $scope.actividadesViernes.push("");
+            }
+
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasLunes.length; j++) {
+                    if ($scope.horasLunes[j].horaDeInicio == i) {
+                        $scope.actividadesLunes[i-8] = ($scope.horasLunes[j].actividad)
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasMartes.length; j++) {
+                    if ($scope.horasMartes[j].horaDeInicio == i) {
+                        $scope.actividadesMartes[i-8] = ($scope.horasMartes[j].actividad)
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasMiercoles.length; j++) {
+                    if ($scope.horasMiercoles[j].horaDeInicio == i) {
+                        $scope.actividadesMiercoles[i-8] = ($scope.horasMiercoles[j].actividad)
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasJueves.length; j++) {
+                    if ($scope.horasJueves[j].horaDeInicio == i) {
+                        $scope.actividadesJueves[i-8] = ($scope.horasJueves[j].actividad)
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasViernes.length; j++) {
+                    if ($scope.horasViernes[j].horaDeInicio == i) {
+                        $scope.actividadesViernes[i-8] = ($scope.horasViernes[j].actividad)
+                        break;
+                    }
+                }
+            }
+        };
+
+        loadData();
+
+        $scope.isAdmin = function() {
+            if ($scope.userType == "Administrador") return true;
+            else return false;
+        };
+
+        var getInfoError = function() {};
+
+        var getInfoSuccess = function (espacio) {
+            $scope.horarios = espacio.horario
+            $scope.horasLunes = $scope.horarios.horasLunes;
+            $scope.horasMartes = $scope.horarios.horasMartes;
+            $scope.horasMiercoles= $scope.horarios.horasMiercoles;
+            $scope.horasJueves = $scope.horarios.horasJueves;
+            $scope.horasViernes = $scope.horarios.horasViernes;
+
+            $scope.actividadesLunes =[];
+            $scope.actividadesMartes = [];
+            $scope.actividadesMiercoles = [];
+            $scope.actividadesJueves = [];
+            $scope.actividadesViernes = [];
+
+            loadData();
+        };
+
+        $scope.diaActualizar = "";
+        $scope.horaActualizar = "";
+
+        $scope.actualizar = function(dia, hora) {
+            $scope.diaActualizar = dia;
+            $scope.horaActualizar = hora;
+
+            map.getInfo($scope.idSelected, getInfoSuccess, getInfoError);
+        };
+
+        $scope.editar = function(dia, hora) {
+            $scope.verEditar(dia,hora,$scope.showActividad(dia, hora),$scope.idSelected, map)
+        };
+
+        $scope.loadActivities = function() {
+
+        };
+
+        $scope.showActividad = function(dia, hora) {
+            switch(dia) {
+                case "Lunes": $scope.horasCheckear = $scope.horasLunes; break;
+                case "Martes": $scope.horasCheckear = $scope.horasMartes; break;
+                case "Miercoles": $scope.horasCheckear = $scope.horasMiercoles; break;
+                case "Jueves": $scope.horasCheckear = $scope.horasJueves; break;
+                case "Viernes": $scope.horasCheckear = $scope.horasViernes; break;
+            }
+
+            for (var i=0; i< $scope.horasCheckear.length; i++) {
+                if ($scope.horasCheckear[i].horaDeInicio == hora) {
+                    return $scope.horasCheckear[i].actividad;
+                }
+            }
+            return "";
+
+        };
+
+        $scope.close = function () {
+            $uibModalInstance.close();
+        };
+
+        $scope.verEditar = function(dia, hora, actividad, idEspacio,map) {
+            var modalEditar = $scope.uibModal.open({
+                templateUrl: 'templates/editarHorario.html',
+                animation: true,
+                windowClass: 'modal',
+                controller: 'modalEditarCtrl',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            dia: dia,
+                            hora: hora,
+                            actividad: actividad,
+                            idEspacio: idEspacio,
+                            map: map
+                        }
+                    }
+                },
+            });
+
+            modalEditar.result.then(function (devolucion) {
+                $scope.actualizar(devolucion.dia, devolucion.hora);
+            })
+        }
+    })
+
+    .controller('modalEditarCtrl', function ($scope, $uibModalInstance, data) {
+        $scope.dia = data.dia;
+        $scope.hora = data.hora;
+        $scope.actividad = data.actividad;
+        $scope.idEspacio = data.idEspacio;
+
+        var map = data.map;
+
+        var close = function () {
+            var devolucion = {
+                dia: $scope.dia,
+                hora: $scope.hora
+            };
+
+            $uibModalInstance.close(devolucion);
+        };
+
+        $scope.guardar = function() {
+            console.log("Actividad a guardar: " + $scope.actividad)
+            var datos = {
+                idEspacio: $scope.idEspacio,
+                dia: $scope.dia,
+                hora: $scope.hora,
+                actividad: $scope.actividad
+            };
+            map.guardarHora(datos, close)
+        };
+    });

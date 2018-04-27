@@ -8,8 +8,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import src.domain.User;
-import src.domain.UserRepository;
+import src.application.domain.User;
+import src.application.domain.UserRepository;
 
 @Repository
 public class UserRepositoryImplementation implements UserRepository {
