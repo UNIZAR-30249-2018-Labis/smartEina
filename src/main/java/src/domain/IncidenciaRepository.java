@@ -1,12 +1,18 @@
 package src.domain;
 
+import java.util.ArrayList;
+
 public interface IncidenciaRepository {
 
   Incidencia findIncidenciaByID(String id);
 
-  boolean  addIncidencia(Incidencia i);
+  ArrayList<Incidencia> findIncidenciaOfTrabajador(String idTrabajador);
 
-  boolean updateIncidenciaByID(Incidencia i);
+  int  addIncidencia(String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion);
+
+  boolean updateIncidenciaByID(String id,String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion);
+
+  Localizacion findLocalizacionOfIncidencia(String id);
 
   boolean deleteIncidenciaByID(String id);
 
