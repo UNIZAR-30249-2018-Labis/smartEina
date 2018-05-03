@@ -51,10 +51,6 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     }
   };
 
-
-
-
-
   @Override
   public int addIncidencia(String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion) {
     String SQL,buscar;
@@ -135,6 +131,24 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     }
     catch (EmptyResultDataAccessException e){
     return null;
+    }
+  }
+
+  @Override
+  public ArrayList<Incidencia> findIncidenciaCreadaByUser(String username) {
+    try{
+      String SQL = "SELECT p.idIncidencia,p.titulo,p.estado,p.descripcion,p.idLocalizacion,l.x,l.y,l.planta,l.id_espacio "
+          + "FROM public.tb_incidencias p,public.tb_users u,tb_incidenciasCreadasXUsuario icxu,public.tb_localizacion l  "
+          + "WHERE u.username = ? AND u.username = icxu.username AND p.idIncidencia = icxu.idIncidencia"
+          + " AND l.id = p.idLocalizacion";
+      List<Incidencia> incidencias = jdbc.query(
+          SQL,
+          new Object[] {username},
+          incidenciaMapper);
+      return new ArrayList<>(incidencias);
+    }
+    catch (EmptyResultDataAccessException e){
+      return null;
     }
   }
 

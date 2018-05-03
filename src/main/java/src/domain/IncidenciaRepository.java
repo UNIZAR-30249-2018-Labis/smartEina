@@ -8,6 +8,8 @@ public interface IncidenciaRepository {
 
   ArrayList<Incidencia> findIncidenciaOfTrabajador(String idTrabajador);
 
+  ArrayList<Incidencia> findIncidenciaCreadaByUser(String username);
+
   int  addIncidencia(String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion);
 
   boolean updateIncidenciaByID(String id,String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion);

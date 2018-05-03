@@ -188,4 +188,12 @@ public class MapControllerTest {
     assertTrue(res && i.getEstado().equals(("RECHAZADA")));
   }
 
+  @Test
+  public void sacarIncidenciasdeUsuario() {
+    ArrayList<Incidencia> listaIncidencias = incidenciaRepositorio.findIncidenciaCreadaByUser("admin");
+    for(int i = 0; i < listaIncidencias.size() ; i++) System.out.println(listaIncidencias.get(i).getId());
+    assertTrue(listaIncidencias.size() > 0);
+  }
+
+
 }
