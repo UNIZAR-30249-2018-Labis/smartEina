@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import src.domain.CeldaHorario;
 import src.domain.Horario;
 import src.domain.HorarioRepository;
+import src.domain.IncidenciaRepository;
+import src.domain.Localizacion;
 
 @Repository
 public class HorarioRepositoryImplementation implements HorarioRepository {
@@ -73,6 +75,10 @@ public class HorarioRepositoryImplementation implements HorarioRepository {
         }
     }
 
+    @Override
+    public Horario horarioDeEspacioDeIncidencia(String idEspacio) {
+        return findHorario(idEspacio);
+    }
 
     private boolean isHoraLibre(Horario horario, String dia, int hora) {
         // Obtenemos las horas del dia

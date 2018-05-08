@@ -43,4 +43,22 @@ public class Horario {
     public ArrayList<CeldaHorario> getHorasViernes() {
         return horasViernes;
     }
+
+    public String toJson(){
+
+        return null;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Horario) {
+            Horario c = (Horario) o;
+            if (this.idEspacio.equals(c.idEspacio) && this.horasJueves.equals(c.horasJueves) &&
+                this.horasLunes.equals(c.horasLunes) && this.horasMartes.equals(c.horasMartes) &&
+                this.horasMiercoles.equals(c.horasMiercoles) && this.horasViernes.equals(c.horasViernes)
+                ) return true;
+            else return false;
+        }
+        return false;
+
+    }
 }

@@ -1,5 +1,6 @@
 package src;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -14,6 +15,7 @@ import src.domain.EspacioRepository;
 import src.domain.Horario;
 
 import java.util.ArrayList;
+import src.domain.HorarioRepository;
 import src.domain.Incidencia;
 import src.domain.IncidenciaRepository;
 import src.domain.Localizacion;
@@ -28,6 +30,9 @@ public class MapControllerTest {
 
   @Autowired
   protected IncidenciaRepository incidenciaRepositorio;
+
+  @Autowired
+  protected HorarioRepository horarioRepositorio;
 
   @Test
   public void getInfoTest() {
@@ -193,6 +198,37 @@ public class MapControllerTest {
     ArrayList<Incidencia> listaIncidencias = incidenciaRepositorio.findIncidenciaCreadaByUser("admin");
     for(int i = 0; i < listaIncidencias.size() ; i++) System.out.println(listaIncidencias.get(i).getId());
     assertTrue(listaIncidencias.size() > 0);
+  }
+
+  @Test
+  public void sacarHorarioDeEspacio(){
+    Localizacion l = new Localizacion("CRE.1065.00.020",10,15,1);
+    CeldaHorario lunes = new CeldaHorario(l.getIdEspacio(),"Lunes",8,"Actividad1");
+    CeldaHorario m = new CeldaHorario(l.getIdEspacio(),"Martes",15,"Actividad2");
+    CeldaHorario x = new CeldaHorario(l.getIdEspacio(),"Miercoles",16,"Actividad3");
+    CeldaHorario j = new CeldaHorario(l.getIdEspacio(),"Jueves",10,"Actividad4");
+    CeldaHorario v = new CeldaHorario(l.getIdEspacio(),"Viernes",12,"Actividad5");
+    ArrayList<CeldaHorario> celdaLunes = new ArrayList<CeldaHorario>();celdaLunes.add(lunes);
+    ArrayList<CeldaHorario> celdaMartes = new ArrayList<CeldaHorario>();celdaMartes.add(m);
+    ArrayList<CeldaHorario> celdaMiercoles = new ArrayList<CeldaHorario>();celdaMiercoles.add(x);
+    ArrayList<CeldaHorario> celdaJueves = new ArrayList<CeldaHorario>();celdaJueves.add(j);
+    ArrayList<CeldaHorario> celdaViernes = new ArrayList<CeldaHorario>();celdaViernes.add(v);
+    Horario h = new Horario(l.getIdEspacio(),celdaLunes,celdaMartes,celdaMiercoles
+    ,celdaJueves,celdaViernes);
+    int incidencia1 = incidenciaRepositorio.addIncidencia("Nuevo","Test","PENDIENTE","3",l);
+    horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Lunes",8,"Actividad1");
+    horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Martes",15,"Actividad2");
+    horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Miercoles",16,"Actividad3");
+    horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Jueves",10,"Actividad4");
+    horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Viernes",12,"Actividad5");
+    Incidencia i = incidenciaRepositorio.findIncidenciaByID(String.valueOf(incidencia1));
+    Horario comprarar = horarioRepositorio.horarioDeEspacioDeIncidencia(i.getLocalizacion().getIdEspacio());
+    assertTrue(h.equals(comprarar));
+    horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Lunes",8);
+    horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Martes",15);
+    horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Miercoles",16);
+    horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Jueves",10);
+    horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Viernes",12);
   }
 
 

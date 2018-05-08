@@ -8,4 +8,6 @@ public interface HorarioRepository {
 
     Boolean deleteActividadDelHorario(String idEspacio, String dia, int horaInicio);
 
+    Horario horarioDeEspacioDeIncidencia(String idEspacio);
+
 }

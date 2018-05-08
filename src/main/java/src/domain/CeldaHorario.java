@@ -20,4 +20,18 @@ public class CeldaHorario {
     public String getActividad() {
         return this.actividad;
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o instanceof CeldaHorario) {
+            CeldaHorario c = (CeldaHorario) o;
+            if (this.idEspacio.equals(c.idEspacio) && this.dia.equals(c.dia
+            ) && this.horaDeInicio == c.horaDeInicio && this.actividad.equals(c.actividad
+            )) return true;
+            else return false;
+        }
+        return false;
+
+    }
 }
