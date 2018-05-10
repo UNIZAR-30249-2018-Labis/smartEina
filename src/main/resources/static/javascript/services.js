@@ -129,6 +129,21 @@ angular.module('smartEina')
                 });
             },
 
+            obtenerIncidenciasDeUsuario: function(idUser, callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasDeUsuario',
+                    headers: {
+                        'idUser': idUser
+                    }
+                }).success(function(data, status, headers) {
+                    console.log(JSON.parse(headers().incidencias))
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
             getInfo: function (id, callbackSucces, callbackError) {
                 $http({
                     method: 'GET',
@@ -171,7 +186,7 @@ angular.module('smartEina')
                     var r = response.data.features;
 
                     if (r === undefined || r[0] === undefined) {
-                        return undefined;
+                        return "Exterior";
                     } else {
                         console.log("UTC: " + r[0]['properties'].ID_UTC);
                         console.log("EDI: " + r[0]['properties'].ID_EDIFICI);
@@ -181,6 +196,12 @@ angular.module('smartEina')
                 }, function () {
                     return undefined;
                 });
+            },
+
+            obtenerCentroide: function (nombreCapa, idUTC, idEDIFICIO) {
+                var urlCentroid = "http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/wps?service" +
+                    "=WFS&VERSION=1.0.0&request=GetCapabilities&typeName=" + nombreCapa + "&outputFormat=application%2Fjson&CQL_FILTER=" +
+                    "ID_UTC='" + idUTC + "'&ID_EDIFICI='" + idEDIFICIO + "'";
             }
         }
     });

@@ -4,10 +4,69 @@ angular.module('smartEina')
         // Miramos si esta loggeado
         auth.checkLogged();
         $scope.userType = auth.getLoggedType();
+        $scope.userName = auth.getLoggedUsername();
 
         $scope.horario = null;
 
         var plantaActual = 0;
+
+        $scope.misIncidenciasActive = false;
+        $scope.incidenciasGeneralesActive = false;
+
+        $scope.switchMisIncidenciasActive = function() {
+          if ( $scope.misIncidenciasActive == false) {
+              $scope.misIncidenciasActive = true;
+          } else  $scope.misIncidenciasActive = false;
+        };
+
+        $scope.switchIncidenciasGeneralesActive = function() {
+            console.log("Estamos inn")
+            if ( $scope.incidenciasGeneralesActive == false) {
+                $scope.incidenciasGeneralesActive = true;
+            } else  $scope.incidenciasGeneralesActive = false;
+        };
+
+        $scope.incidenciasUserBasico = {
+            "estado": "",
+            "creadas": creadas = [],
+            "aceptadas": aceptadas = [],
+            "modificacion": modificacion = [],
+            "completadas": completadas = [],
+            "rechazadas": rechazadas = []
+        };
+
+        var llenarIncidenciasUserBasico = function(data) {
+            for (var i=0; i< data.length; i++) {
+                var incidencia = data[i];
+                console.log(incidencia);
+                switch (incidencia.estado) {
+                    case "PENDIENTE":
+                        $scope.incidenciasUserBasico.creadas.push(incidencia);
+                        break;
+                    case "INCOMPLETA":
+                        $scope.incidenciasUserBasico.modificacion.push(incidencia);
+                        break;
+                    case "ACEPTADA":
+                        $scope.incidenciasUserBasico.aceptadas.push(incidencia);
+                        break;
+                    case "ASIGNADA":
+                        $scope.incidenciasUserBasico.aceptadas.push(incidencia);
+                        break;
+                    case "COMPLETADA":
+                        $scope.incidenciasUserBasico.completadas.push(incidencia);
+                        break;
+                    case "RECHAZADA":
+                        $scope.incidenciasUserBasico.rechazadas.push(incidencia);
+                        break;
+                }
+            }
+
+            console.log($scope.incidenciasUserBasico)
+        };
+
+
+        map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
+
 
         $scope.basicLayer = {
             xyz: {
@@ -17,7 +76,6 @@ angular.module('smartEina')
                 layerOptions: {
                     visible: false,
                     attribution: '',
-                    minZoom: 16,
                     "showOnSelector": false
 
                 }
@@ -76,7 +134,6 @@ angular.module('smartEina')
 
                 $scope.addMarker(latitude, longitude);
             });
-            //map.getInfo("CRE.1065.00.020", getInfoSuccess, getInfoError);
         });
 
         var getInfoError = function () {
@@ -106,6 +163,7 @@ angular.module('smartEina')
             angular.extend($scope.data, {plantaSelected: "Cargando..."});
             angular.extend($scope.data, {usoSelected: "Cargando..."});
 
+
             angular.extend($scope.data, {
                 markers: {
                     m: {
@@ -121,7 +179,8 @@ angular.module('smartEina')
                         "<div class='row'><p><strong>Edificio:</strong></p><p> {{data.edificioSelected}} </p></div>" +
                         "<div class='row'><p><strong>Planta:</strong></p><p> {{data.plantaSelected}} </p></div>" +
                         "<div class='row'><p><strong>Tipo de uso:</strong></p><p> {{data.usoSelected}} </p></div>" +
-                        "<button type='button' class='btn btn-primary' ng-click='verHorario()'>Ver horario</button></div>",
+                        "<div class='row'><button type='button' class='btn btn-primary' ng-click='verHorario()'>Ver horario</button></div>"+
+                        "<div class='row'><button type='button' class='btn btn-primary' ng-click='verIncidencias()'>Ver incidencias</button></div>",
                         draggable: false,
                         compileMessage: true
                     }

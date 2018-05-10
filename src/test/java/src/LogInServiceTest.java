@@ -13,7 +13,7 @@ import java.sql.Date;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
 
-public class LogInControllerTest {
+public class LogInServiceTest {
 
     @Autowired
     protected UserRepository userRepository;

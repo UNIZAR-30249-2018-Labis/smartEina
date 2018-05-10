@@ -16,7 +16,7 @@ import src.application.domain.UserRepository;
 import src.application.domain.User;
 
 @RestController
-public class LogInController {
+public class LogInService {
 
     @Autowired
     UserRepository userRepository;

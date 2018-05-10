@@ -7,7 +7,7 @@ public class Espacio extends Entity {
     private String edificio;
     private String tipoDeUso;
     private Boolean exterior;
-    private int planta;
+    private String planta;
     private Horario horario;
 
     public String getId() {return super.getId();}
@@ -28,9 +28,9 @@ public class Espacio extends Entity {
 
     public Boolean getExterior() { return this.exterior; }
 
-    public int getPlanta() { return planta; }
+    public String getPlanta() { return planta; }
 
-    public Espacio(String id, String nombre, String edificio, String tipoDeUso, Boolean exterior, int planta, Horario horario) {
+    public Espacio(String id, String nombre, String edificio, String tipoDeUso, Boolean exterior, String planta, Horario horario) {
         super(id);
         this.nombre = nombre;
         this.edificio = edificio;

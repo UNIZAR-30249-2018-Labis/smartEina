@@ -6,30 +6,35 @@ public interface IncidenciaRepository {
 
   Incidencia findIncidenciaByID(String id);
 
-  ArrayList<Incidencia> findIncidenciaOfTrabajador(String idTrabajador);
+  ArrayList<Incidencia> findAllIncidenciasByTrabajador(String idTrabajador);
 
-  ArrayList<Incidencia> findIncidenciaCreadaByUser(String username);
+  ArrayList<Incidencia> findAllIncidenciasByUser(String username);
 
-  int  addIncidencia(String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion);
+  boolean addIncidencia(Incidencia incidencia);
 
-  boolean updateIncidenciaByID(String id,String titulo,String desc,String estado,String idTrabajador,Localizacion localizacion);
+  boolean updateIncidenciaByID(Incidencia incidencia);
 
-  Localizacion findLocalizacionOfIncidencia(String id);
+  boolean deleteIncidenciaByID(String idIncidencia);
 
-  boolean deleteIncidenciaByID(String id);
+  boolean pendienteToIncompleta(Incidencia incidencia);
 
-  boolean pendienteToIncompleta(String id);
+  boolean incompletaToPendiente(Incidencia incidencia);
 
-  boolean incompletaToPendiente(String id);
+  boolean pendienteToAceptada(Incidencia incidencia);
 
-  boolean pendienteToAceptada(String id);
+  boolean aceptadaToAsignada(Incidencia incidencia);
 
-  boolean aceptadaToAsignada(String id,String idTrabajador);
+  boolean asignadaToAceptada(Incidencia incidencia, String idTrabajador);
 
-  boolean asignadaToCompletada(String id);
+  boolean asignadaToFinalizada(Incidencia incidencia);
 
-  boolean pendienteToRechazada(String id);
+  boolean pendienteToRechazada(Incidencia incidencia);
 
+  Localizacion findLocalizacionByIDIncidencia(String idIncidencia);
 
+  boolean addLocalizacion(String idIncidencia, float x, float y, String planta, String idEspacio);
 
+  boolean deleteLocalizacionByIDIncidencia(String idIncidencia);
+
+  String addIncidenciaTest(Incidencia incidencia);
 }

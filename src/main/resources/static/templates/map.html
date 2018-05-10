@@ -1,14 +1,260 @@
 <div style="margin-top: 70px">
-    <div class="container">
-        <div class="row" style="margin-left:20px; margin-bottom: 20px; ">
-            <div class="col-md-3">
-
+    <div class="row" style="margin-left:20px; margin-bottom: 20px; ">
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading" ng-click="switchIncidenciasGeneralesActive()">
+                    <h2>Incidencias</h2>
+                </div>
+                <div ng-show="incidenciasGeneralesActive" class="panel-body">
+                    <p>Active</p>
+                </div>
             </div>
-            <div class="col-md-9">
-                <leaflet layers="layers" markers="data.markers" control="controls" lf-center="cps" event-broadcast="events" style="height: 80vh;width: 100vh"></leaflet>
-                <button class="btn btn-primary" ng-click="subirPlanta()"> Subir planta </button>
-                <button class="btn btn-primary" ng-click="bajarPlanta()"> Bajar planta </button>
+            <div class="panel panel-default">
+                <div class="panel-heading" ng-click="switchMisIncidenciasActive()">
+                    <h2>Mis incidencias</h2>
+                </div>
+                <div ng-show="misIncidenciasActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'creadas'">
+                            <h4>Creadas </h4>
+                        </div>
+                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'creadas'">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                <tr class="table-head">
+                                    <th class="col-md-8">Nombre</th>
+                                    <th class="col-md-2">Ver</th>
+                                    <th class="col-md-2">Editar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="incidencia in incidenciasUserBasico.creadas">
+                                    <th scope="row">{{incidencia.titulo}}</th>
+                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                    <td><button ng-click="editarIncidencia(incidencia)" class="btn btn-primary">Editar</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'activas'">
+                            <h4>Activas</h4>
+                        </div>
+                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'activas'">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                <tr class="table-head">
+                                    <th class="col-md-10">Nombre</th>
+                                    <th class="col-md-2">Ver</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="incidencia in incidenciasUserBasico.activas">
+                                    <th scope="row">{{incidencia.titulo}}</th>
+                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div  class="panel panel-warning">
+                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'modificar'">
+                            <h4>Pendientes de modificación</h4>
+                        </div>
+                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'modificar'">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                <tr class="table-head">
+                                    <th class="col-md-8">Nombre</th>
+                                    <th class="col-md-2">Ver</th>
+                                    <th class="col-md-2">Editar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="incidencia in incidenciasUserBasico.modificar">
+                                    <th scope="row">{{incidencia.titulo}}</th>
+                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                    <td><button ng-click="editarIncidencia(incidencia)" class="btn btn-primary">Editar</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'finalizadas'">
+                            <h4>Finalizadas</h4>
+                        </div>
+                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'finalizadas'">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                <tr class="table-head">
+                                    <th class="col-md-10">Nombre</th>
+                                    <th class="col-md-2">Ver</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="incidencia in incidenciasUserBasico.finalizadas">
+                                    <th scope="row">{{incidencia.titulo}}</th>
+                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div  class="panel panel-danger">
+                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'rechazadas'">
+                            <h4>Rechazadas</h4>
+                        </div>
+                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'rechazadas'">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                <tr class="table-head">
+                                    <th class="col-md-10">Nombre</th>
+                                    <th class="col-md-2">Ver</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="incidencia in incidenciasUserBasico.rechazadas">
+                                    <th scope="row">{{incidencia.titulo}}</th>
+                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div>
+        </div>
+        <div class="col-md-6">
+            <leaflet layers="layers" markers="data.markers" control="controls" lf-center="cps" event-broadcast="events" style="height: 80vh;width: 100vh"></leaflet>
+            <button class="btn btn-primary" ng-click="subirPlanta()"> Subir planta </button>
+            <button class="btn btn-primary" ng-click="bajarPlanta()"> Bajar planta </button>
+        </div>
+        <div class="col-md-1"></div>
     </div>
 </div>
+
+
+<!--<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Creadas</h4>
+    </div>
+    <div class="panel-body"></div>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>Activas</h4>
+    </div>
+    <div class="panel-body"></div>
+</div>
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h4>Pendientes de modificación</h4>
+    </div>
+    <div class="panel-body"></div>
+</div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h4>Finalizadas</h4>
+    </div>
+    <div class="panel-body"></div>
+</div>
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h4>Rechazadas</h4>
+    </div>
+    <div class="panel-body"></div>
+</div>-->
+
+<!-- <ul class="nav nav-tabs">
+                    <li class="active noround">
+                        <a data-toggle="tab" href="#creadas">Creadas</a>
+                    </li>
+                    <li class="noround">
+                        <a data-toggle="tab" href="#activas">Activas</a>
+                    </li>
+                    <li class="noround">
+                        <a data-toggle="tab" href="#modificar">Pendientes de modificación</a>
+                    </li>
+                    <li class="noround">
+                        <a data-toggle="tab" href="#terminadas">Terminadas</a>
+                    </li>
+                    <li class="noround">
+                        <a data-toggle="tab" href="#rechazadas">Rechazadas</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="creadas" class="tab-pane fade in active">
+                        &lt;!&ndash;<br>
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="col-md-10">Nombre</th>
+                                <th class="col-md-2">Editar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">8:00 - 9:00</th>
+                                <td><button class="btn btn-primary">Editar</button></td>
+                            </tr>
+                            </tbody>
+                        </table>&ndash;&gt;
+                    </div>
+                    <div id="activas" class="tab-pane fade">
+                        <br>
+                    </div>
+                    <div id="modificar" class="tab-pane fade in active">
+                        &lt;!&ndash;<br>
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="col-md-10">Nombre</th>
+                                <th class="col-md-2">Editar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">8:00 - 9:00</th>
+                                <td><button class="btn btn-primary">Editar</button></td>
+                            </tr>
+                            </tbody>
+                        </table>&ndash;&gt;
+                    </div>
+                    <div id="terminadas" class="tab-pane fade in active">
+                        &lt;!&ndash;<br>
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="col-md-10">Nombre</th>
+                                <th class="col-md-2">Editar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">8:00 - 9:00</th>
+                                <td><button class="btn btn-primary">Editar</button></td>
+                            </tr>
+                            </tbody>
+                        </table>&ndash;&gt;
+                    </div>
+                    <div id="rechazadas" class="tab-pane fade in active">
+                        &lt;!&ndash;<br>
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="col-md-10">Nombre</th>
+                                <th class="col-md-2">Editar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">8:00 - 9:00</th>
+                                <td><button class="btn btn-primary">Editar</button></td>
+                            </tr>
+                            </tbody>
+                        </table>&ndash;&gt;
+                    </div>
+                </div>-->

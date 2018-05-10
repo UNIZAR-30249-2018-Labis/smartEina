@@ -14,7 +14,7 @@ import src.application.domain.User;
 import src.application.domain.UserRepository;
 
 @RestController
-public class SignUpController {
+public class SignUpService {
 
     @Autowired
     protected UserRepository userRepository;
