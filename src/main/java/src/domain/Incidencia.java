@@ -8,7 +8,7 @@ public class Incidencia extends Entity {
   private String idTrabajador;
   private Localizacion localizacion;
 
-  public Incidencia(String id,String titulo,String desc,String estado, String idUsuario, String idTrabajdor, Localizacion localizacion) {
+  public Incidencia(String id,String titulo,String desc,String estado, String idUsuario, String idTrabajador, Localizacion localizacion) {
     super(id);
     this.titulo = titulo;
     this.desc = desc;

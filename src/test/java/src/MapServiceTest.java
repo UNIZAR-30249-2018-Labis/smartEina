@@ -29,8 +29,7 @@ public class MapServiceTest {
   @Autowired
   protected IncidenciaRepository incidenciaRepositorio;
 
-  @Autowired
-  protected HorarioRepository horarioRepositorio;
+
 
   @Test
   public void getInfoTest() {

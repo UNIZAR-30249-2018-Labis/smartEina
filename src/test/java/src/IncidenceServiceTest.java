@@ -1,5 +1,8 @@
 package src;
 
+import static junit.framework.TestCase.assertTrue;
+
+import java.util.ArrayList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,15 @@ public class IncidenceServiceTest {
     @Autowired
     protected IncidenciaRepository incidenciaRepository;
 
+    @Autowired
+    protected EspacioRepository espacioRepository;
+
+
     @Test
     public void addIncidenciaTest() {
-        String idIncidencia = incidenciaRepository.addIncidenciaTest("Prueba", "Prueba", "0", 1,1,"00","CRE.1065.00.020");
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "Prueba", "desc", "PENDIENTE","3","3",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
         assert(!idIncidencia.equals(""));
         incidenciaRepository.deleteIncidenciaByID(idIncidencia);
     }
@@ -29,10 +38,13 @@ public class IncidenceServiceTest {
 
     @Test
     public void buscarIncidenciaExisteTest() {
-        String idIncidencia = incidenciaRepository.addIncidenciaTest("Prueba", "Prueba", "0", 1,1,"00","CRE.1065.00.020");
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "Prueba", "desc", "PENDIENTE","3","3",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
         assert(incidenciaRepository.findIncidenciaByID(idIncidencia) != null);
         incidenciaRepository.deleteIncidenciaByID(idIncidencia);
     }
+
 
     @Test
     public void borrarIncidenciaNoExisteTest() {
@@ -41,51 +53,76 @@ public class IncidenceServiceTest {
 
     @Test
     public void borrarIncidenciaExisteTest() {
-        String idIncidencia = incidenciaRepository.addIncidenciaTest("Prueba", "Prueba", "0", 1,1,"00","CRE.1065.00.020");
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "Prueba", "desc", "PENDIENTE","3","3",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
         assert(incidenciaRepository.deleteIncidenciaByID(idIncidencia));
     }
 
     @Test
     public void updateIncidenciaNoExisteTest() {
-        assert(!incidenciaRepository.updateIncidenciaByID("-1", "updated", "updated"));
+
+        assert(!incidenciaRepository.updateIncidenciaByID(new Incidencia("-1",null,null,
+            null,null,null,null)));
     }
 
     @Test
-    public void updateIncidenciaExisteTEst() {
-        String idIncidencia = incidenciaRepository.addIncidenciaTest("Prueba", "Prueba", "0", 1,1,"00","CRE.1065.00.020");
-        assert(incidenciaRepository.updateIncidenciaByID(idIncidencia, "updated", "updated"));
-        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    public void updateIncidenciaExisteTest() {
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "Prueba", "desc", "PENDIENTE","3","3",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
+        Incidencia nueva = new Incidencia(idIncidencia,"NUEVO TITULO","NUEVA DESC",i.getEstado(),
+            i.getIdUsuario(),i.getIdTrabajador(),i.getLocalizacion());
+        assert(incidenciaRepository.updateIncidenciaByID(nueva));
+        i = incidenciaRepository.findIncidenciaByID(nueva.getId());
+        assert(i.getTitulo().equals(nueva.getTitulo()) && i.getDesc().equals(nueva.getDesc()));
+        incidenciaRepository.deleteIncidenciaByID(i.getId());
     }
 
-/*    @Test
+     @Test
     public void sacarIncidenciasdeTrabajador_existe() {
-        Localizacion l = new Localizacion("CRE.1065.00.020",10,15,1);
-        for( int i = 0; i < 5 ; i++) incidenciaRepositorio.addIncidencia("Nuevo" + i,"Test","PENDIENTE","4",l);
-        ArrayList<Incidencia> listaIncidencias = incidenciaRepositorio.findIncidenciaOfTrabajador("4");
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
+        Incidencia incidencia;
+        ArrayList<String> ids = new ArrayList<>();
+        for( int i = 0; i < 5 ; i++){
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","99",l);
+            String id = incidenciaRepository.addIncidenciaTest(incidencia);
+            Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","99",l);
+            System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
+            ids.add(id);
+        }
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("99");
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
-        assertTrue(listaIncidencias.size() > 0);
+        assertTrue(listaIncidencias.size() ==  5);
+        for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
     }
 
     @Test
     public void sacarIncidenciasdeTrabajador_noexiste() {
-        ArrayList<Incidencia> listaIncidencias = incidenciaRepositorio.findIncidenciaOfTrabajador("-1");
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("-1");
         assertTrue(listaIncidencias.size() == 0);
-    }*/
+    }
 
     @Test
     public void cambioDeEstadoTest() {
-        String idIncidencia = incidenciaRepository.addIncidenciaTest("Prueba", "Prueba", "0", 1,1,"00","CRE.1065.00.020");
-        assert(incidenciaRepository.pendienteToIncompleta(idIncidencia));
-        assert(incidenciaRepository.incompletaToPendiente(idIncidencia));
-        assert(incidenciaRepository.pendienteToAceptada(idIncidencia));
-
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "Prueba", "desc", "PENDIENTE","1","99",l);
+        String id = incidenciaRepository.addIncidenciaTest(i);
+        i = new Incidencia(id, "Prueba", "desc", "PENDIENTE","1","99",l);
+        assert(incidenciaRepository.pendienteToIncompleta(i));
+        assert(incidenciaRepository.incompletaToPendiente(i));
+        assert(incidenciaRepository.pendienteToAceptada(i));
+        assert(incidenciaRepository.aceptadaToAsignada(i));
+        assert(incidenciaRepository.asignadaToAceptada(i,i.getIdTrabajador()));
+        assert(incidenciaRepository.asignadaToFinalizada(i));
+        assert(incidenciaRepository.pendienteToRechazada(i));
         // TODO: FALTAN LOS DE TRABAJADOR, CUANDO TENGAMOS UNO DE PRUEBA
+        incidenciaRepository.deleteIncidenciaByID(id);
     }
 
-/*
     @Test
     public void sacarHorarioDeEspacio(){
-        Localizacion l = new Localizacion("CRE.1065.00.020",10,15,1);
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
         CeldaHorario lunes = new CeldaHorario(l.getIdEspacio(),"Lunes",8,"Actividad1");
         CeldaHorario m = new CeldaHorario(l.getIdEspacio(),"Martes",15,"Actividad2");
         CeldaHorario x = new CeldaHorario(l.getIdEspacio(),"Miercoles",16,"Actividad3");
@@ -98,20 +135,41 @@ public class IncidenceServiceTest {
         ArrayList<CeldaHorario> celdaViernes = new ArrayList<CeldaHorario>();celdaViernes.add(v);
         Horario h = new Horario(l.getIdEspacio(),celdaLunes,celdaMartes,celdaMiercoles
                 ,celdaJueves,celdaViernes);
-        int incidencia1 = incidenciaRepositorio.addIncidencia("Nuevo","Test","PENDIENTE","3",l);
-        horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Lunes",8,"Actividad1");
-        horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Martes",15,"Actividad2");
-        horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Miercoles",16,"Actividad3");
-        horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Jueves",10,"Actividad4");
-        horarioRepositorio.addActividadAlHorario(l.getIdEspacio(),"Viernes",12,"Actividad5");
-        Incidencia i = incidenciaRepositorio.findIncidenciaByID(String.valueOf(incidencia1));
-        Horario comprarar = horarioRepositorio.horarioDeEspacioDeIncidencia(i.getLocalizacion().getIdEspacio());
+        Incidencia i = new Incidencia("00","TEST_HIORARIOS","DES","PENDIENTE","3",null,l);
+        String id = incidenciaRepository.addIncidenciaTest(i);
+        espacioRepository.addActividadAlHorario(l.getIdEspacio(),"Lunes",8,"Actividad1");
+        espacioRepository.addActividadAlHorario(l.getIdEspacio(),"Martes",15,"Actividad2");
+        espacioRepository.addActividadAlHorario(l.getIdEspacio(),"Miercoles",16,"Actividad3");
+        espacioRepository.addActividadAlHorario(l.getIdEspacio(),"Jueves",10,"Actividad4");
+        espacioRepository.addActividadAlHorario(l.getIdEspacio(),"Viernes",12,"Actividad5");
+        Incidencia in = incidenciaRepository.findIncidenciaByID(id);
+        Horario comprarar = espacioRepository.horarioDeEspacioDeIncidencia(in.getLocalizacion().getIdEspacio());
         assertTrue(h.equals(comprarar));
-        horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Lunes",8);
-        horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Martes",15);
-        horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Miercoles",16);
-        horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Jueves",10);
-        horarioRepositorio.deleteActividadDelHorario(l.getIdEspacio(),"Viernes",12);
-    }*/
+        espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Lunes",8);
+        espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Martes",15);
+        espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Miercoles",16);
+        espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Jueves",10);
+        espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Viernes",12);
+    }
+
+    @Test
+    public void sacarIncidenciasdeUser(){
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
+        String username = "prueba";
+        Incidencia incidencia;
+        ArrayList<String> ids = new ArrayList<>();
+        for( int i = 0; i < 5 ; i++){
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_user" + i,"TEST_user","PENDIENTE",username,"99",l);
+            String id = incidenciaRepository.addIncidenciaTest(incidencia);
+            Incidencia incidencia2 = new Incidencia(id ,"Test_user" + i,"TEST_user","PENDIENTE",username,"99",l);
+            System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
+            ids.add(id);
+        }
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByUser(username);
+        for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
+        assertTrue(listaIncidencias.size() ==  5);
+        for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
+
+    }
 
 }
