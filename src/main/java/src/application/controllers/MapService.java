@@ -57,8 +57,7 @@ public class MapService {
   }
 
   @RequestMapping(value = "/verHorarioDeEspacio", method = RequestMethod.GET)
-  public ResponseEntity<String> verHorarioDeEspacio(HttpServletRequest request)
-      throws JsonProcessingException {
+  public ResponseEntity<String> verHorarioDeEspacio(HttpServletRequest request) {
     String idIncidencia = request.getParameter("idIncidencia");
     Incidencia i = incidenciaRepository.findIncidenciaByID(idIncidencia);
     Horario h = espacioRepository.horarioDeEspacioDeIncidencia(i.getLocalizacion().getIdEspacio());

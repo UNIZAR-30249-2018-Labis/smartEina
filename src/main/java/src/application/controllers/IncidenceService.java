@@ -122,4 +122,29 @@ public class IncidenceService {
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/verIncidenciasDeSala", method = RequestMethod.GET)
+    public ResponseEntity<String> verIncidenciasDeSala( @RequestParam("x") float x,
+        @RequestParam("y") float y,
+        @RequestParam("planta") String planta,
+        @RequestParam("idEspacio") String idEspacio) {
+        Localizacion localizacion = new Localizacion(null, idEspacio, x, y,planta);
+        ArrayList<Incidencia> incidenciadFiltradas = incidenciaRepository.findIncidenciasBySala(localizacion.getIdEspacio());
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+
+        String json = gson.toJson(incidenciadFiltradas);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/verIncidenciasAceptadas", method = RequestMethod.GET)
+    public ResponseEntity<String> verIncidenciasAceptadas() {
+        ArrayList<Incidencia> incidenciadActivas = incidenciaRepository.findIncidenciasAceptadas();
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+        String json = gson.toJson(incidenciadActivas);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
 }

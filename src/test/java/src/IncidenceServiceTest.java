@@ -21,7 +21,6 @@ public class IncidenceServiceTest {
     @Autowired
     protected EspacioRepository espacioRepository;
 
-
     @Test
     public void addIncidenciaTest() {
         Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
@@ -44,7 +43,6 @@ public class IncidenceServiceTest {
         assert(incidenciaRepository.findIncidenciaByID(idIncidencia) != null);
         incidenciaRepository.deleteIncidenciaByID(idIncidencia);
     }
-
 
     @Test
     public void borrarIncidenciaNoExisteTest() {
@@ -93,8 +91,8 @@ public class IncidenceServiceTest {
         }
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("99");
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
-        assertTrue(listaIncidencias.size() ==  5);
-        for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
+        assertTrue(listaIncidencias.size() >=  5);
+        for(String elId : ids) incidenciaRepository.deleteIncidenciaByID(elId);
     }
 
     @Test
@@ -162,14 +160,52 @@ public class IncidenceServiceTest {
             incidencia = new Incidencia(String.valueOf(i) ,"Test_user" + i,"TEST_user","PENDIENTE",username,"99",l);
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
             Incidencia incidencia2 = new Incidencia(id ,"Test_user" + i,"TEST_user","PENDIENTE",username,"99",l);
-            System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
+            //System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
             ids.add(id);
         }
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByUser(username);
+        for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
+        assertTrue(listaIncidencias.size() >=  5);
+        for(String elId : ids) incidenciaRepository.deleteIncidenciaByID(elId);
+
+    }
+
+    @Test
+    public void sacarIncidenciasdelEspacio(){
+        Localizacion l = new Localizacion(null,"CRE.1201.03.340",15,1,"S00");
+
+        String username = "prueba";
+        Incidencia incidencia;
+        ArrayList<String> ids = new ArrayList<>();
+        for( int i = 0; i < 5 ; i++){
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_espacio" + i,"TEST_espacio","PENDIENTE",username,"99",l);
+            String id = incidenciaRepository.addIncidenciaTest(incidencia);
+            ids.add(id);
+        }
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findIncidenciasBySala(l.getIdEspacio());
+        for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
+        assertTrue(listaIncidencias.size() ==  5);
+        for(String elId : ids) incidenciaRepository.deleteIncidenciaByID(elId);
+
+    }
+
+    @Test
+    public void sacarIncidenciasActivas(){
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
+        String username = "prueba";
+        Incidencia incidencia;
+        ArrayList<String> ids = new ArrayList<>();
+        for( int i = 0; i < 5 ; i++){
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_Aceptadas" + i,"TEST_Aceptadas","PENDIENTE",username,"99",l);
+            String id = incidenciaRepository.addIncidenciaTest(incidencia);
+            Incidencia incidencia2 = new Incidencia(id ,"Test_Aceptadas" + i,"TEST_Aceptadas","ACEPTADA",username,"99",l);
+            System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
+            ids.add(id);
+        }
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findIncidenciasAceptadas();
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
         assertTrue(listaIncidencias.size() ==  5);
         for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
 
     }
-
 }

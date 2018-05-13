@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import src.domain.Espacio;
 import src.domain.Incidencia;
 import src.domain.IncidenciaRepository;
 import src.domain.Localizacion;
@@ -191,6 +192,11 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     SQL = "DELETE FROM public.tb_incidenciasTrabajador WHERE idIncidencia = ?";
 
     jdbc.update(SQL, Integer.parseInt(idIncidencia));
+
+    //Borramos de la tabla de localizaciones
+    SQL = "DELETE FROM public.tb_localizacion WHERE idIncidencia = ?";
+
+    jdbc.update(SQL, Integer.parseInt(idIncidencia));
     return true;
   }
 
@@ -272,6 +278,7 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
       return null;
     }
   }
+
   @Override
   public boolean addLocalizacion(String idIncidencia, float x, float y, String planta, String idEspacio) {
     String SQL;
@@ -300,8 +307,57 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     }
   }
 
+  @Override
+  public ArrayList<Incidencia> findIncidenciasBySala(String idEspacio) {
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    ArrayList<String> ids = new ArrayList<>();
+    try{
+      String SQL = "SELECT * FROM public.tb_localizacion WHERE idespacio = ?";
+      List<Map<String, Object>> rows = jdbc.queryForList(SQL, new Object[] {idEspacio});
 
-  // TODO: SIMPLEMENTE REVISAR LAS TABLAS DE incidenciasUsusario e incidenciasTrabajador
+      for (Map<String, Object> row: rows) {
+        ids.add(String.valueOf(row.get("idIncidencia")));
+      }
+
+      for (String s : ids) {
+        Incidencia incidencia = findIncidenciaByID(s);
+        incidencias.add(incidencia);
+      }
+
+      return incidencias;
+    }
+    catch (EmptyResultDataAccessException e){
+      return null;
+    }
+
+  }
+
+  @Override
+  public ArrayList<Incidencia> findIncidenciasAceptadas() {
+    ArrayList<Incidencia> incidenciasActivas = new ArrayList<>();
+    ArrayList<String> idsDeIncidencias = new ArrayList<>();
+    try{
+      String SQL = "SELECT * FROM public.tb_incidencias WHERE estado = 'ACEPTADA'";
+      List<Map<String, Object>> rows = jdbc.queryForList(SQL);
+
+      for (Map<String, Object> row: rows) {
+        Integer idEntero = (Integer)row.get("idIncidencia");
+        System.out.println(idEntero);
+        idsDeIncidencias.add(String.valueOf(idEntero));
+      }
+
+      for (String s : idsDeIncidencias) {
+        Incidencia incidencia = findIncidenciaByID(s);
+        incidenciasActivas.add(incidencia);
+      }
+
+      return incidenciasActivas;
+    }
+    catch (EmptyResultDataAccessException e){
+      return null;
+    }
+  }
+
   @Override
   // Metodo para testear
   public String addIncidenciaTest(Incidencia incidencia) {
