@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -159,6 +160,20 @@ public class EspacioRepositoryImplementation implements EspacioRepository {
     @Override
     public Horario horarioDeEspacioDeIncidencia(String idEspacio) {
         return findHorario(idEspacio);
+    }
+
+    @Override
+    public ArrayList<String> getCoordenadasByID(String idEspacio) {
+        ArrayList<String> array = new ArrayList<>();
+        String idEdificio = idEspacio.substring(0,9);
+        String idUtc = idEspacio.substring(9);
+
+        String SQL = "SELECT * FROM public.tb_centroides WHERE \"ID_EDIFICI\" = ? AND \"ID_UTC\" = ?";
+        Map<String, Object> row = jdbc.queryForMap(SQL, new Object[] {idEdificio, idUtc});
+
+        array.add((String) row.get("XCOORD"));
+        array.add((String) row.get("YCOORD"));
+        return array;
     }
 
     private boolean isHoraLibre(Horario horario, String dia, int hora) {

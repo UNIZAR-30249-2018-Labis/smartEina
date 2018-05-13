@@ -16,6 +16,8 @@ import src.domain.Horario;
 import src.domain.Incidencia;
 import src.domain.IncidenciaRepository;
 
+import java.util.ArrayList;
+
 @RestController
 public class MapService {
 
@@ -58,7 +60,7 @@ public class MapService {
 
   @RequestMapping(value = "/verHorarioDeEspacio", method = RequestMethod.GET)
   public ResponseEntity<String> verHorarioDeEspacio(HttpServletRequest request) {
-    String idIncidencia = request.getParameter("idIncidencia");
+    String idIncidencia = request.getHeader("idIncidencia");
     Incidencia i = incidenciaRepository.findIncidenciaByID(idIncidencia);
     Horario h = espacioRepository.horarioDeEspacioDeIncidencia(i.getLocalizacion().getIdEspacio());
     Gson gson = new Gson();
@@ -67,5 +69,19 @@ public class MapService {
     headers.add("Horario",json);
     System.out.println(json);
     return new ResponseEntity<String>("\"Exito obteniendo el horario del espacio\"", headers, HttpStatus.OK);
+  }
+
+
+  @RequestMapping(value = "/obtenerCoordsDeEspacio", method = RequestMethod.GET)
+  public ResponseEntity<String> obtenerCoordsEspacio(HttpServletRequest request) {
+    String idEspacio = request.getHeader("idEspacio");
+
+    ArrayList<String> result = espacioRepository.getCoordenadasByID(idEspacio);
+
+    Gson gson = new Gson();
+    String json = gson.toJson(result);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Coordenadas", json);
+    return new ResponseEntity<String>("\"Exito obteniendo el id del espacio\"", headers, HttpStatus.OK);
   }
 }

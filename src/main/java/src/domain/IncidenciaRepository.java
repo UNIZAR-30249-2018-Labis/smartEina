@@ -10,6 +10,12 @@ public interface IncidenciaRepository {
 
   ArrayList<Incidencia> findAllIncidenciasByUser(String username);
 
+  ArrayList<Incidencia> findAllIncidencias();
+
+  ArrayList<Incidencia> findAllIncidenciasAceptadas();
+
+  ArrayList<Incidencia> findAllIncidenciasByEspacio(String idEspacio);
+
   boolean addIncidencia(Incidencia incidencia);
 
   boolean updateIncidenciaByID(Incidencia incidencia);

@@ -1,0 +1,29 @@
+<div class="modal-dialog">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-10">
+                <h2 class="modal-title"> Incidencias de la sala: {{idSelected}}</h2>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" ng-click="close()">Volver</button>
+                <button class="btn btn-primary" ng-click="crearIncidencia()">Crear incidencia</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" style="width: 100%; height: 100%">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-10">Nombre</th>
+                <th class="col-md-2">Ver</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in incidenciasEspacio">
+                <th scope="row">{{incidencia.titulo}}</th>
+                <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

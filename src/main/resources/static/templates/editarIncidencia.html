@@ -1,0 +1,33 @@
+<div>
+    <div ng-show="modo == 'Crear'">
+        <div class="form-group">
+            <label for="espacio">Espacio:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="espacio" value="{{idEspacio}}">
+            <label for="usuario">Usuario:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="usuario" value="{{idUsuario}}">
+            <label for="titulo">Titulo:</label>
+            <input type="text" class="form-control" id="titulo" ng-model="titulo">
+            <label for="descripcion">Descripcion:</label>
+            <input type="text" class="form-control" id="descripcion" ng-model="descripcion">
+        </div>
+        <div>
+            <button ng-click="guardar()" class="btn btn-primary text-center">Crear</button>
+            <button ng-click="volver()" class="btn btn-primary text-center">Volver</button>
+        </div>
+    </div>
+    <div ng-show="modo == 'Ver'">
+        <div class="form-group">
+            <label for="espacioVer">Espacio:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="espacioVer" value="{{idEspacio}}">
+            <label for="usuarioVer">Usuario:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="usuarioVer" value="{{idUsuario}}">
+            <label for="tituloVer">Titulo:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="tituloVer" value="{{titulo}}">
+            <label for="descripcionVer">Descripcion:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="descripcionVer" value="{{descripcion}}">
+        </div>
+        <div>
+            <button ng-click="volver()" class="btn btn-primary text-center">Volver</button>
+        </div>
+    </div>
+</div>

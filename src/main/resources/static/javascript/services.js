@@ -137,10 +137,25 @@ angular.module('smartEina')
                         'idUser': idUser
                     }
                 }).success(function(data, status, headers) {
-                    console.log(JSON.parse(headers().incidencias))
                     callBack(JSON.parse(headers().incidencias))
                 }).error(function() {
                     callBack([])
+                });
+            },
+
+            obtenerIncidenciasDeEspacio: function(idEspacio, callBack) {
+                console.log("Enviamos: ", idEspacio)
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasDeEspacio',
+                    headers: {
+                        'idEspacio': idEspacio
+                    }
+                }).success(function(data, status, headers) {
+                    console.log(headers().incidencias)
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([]);
                 });
             },
 
@@ -198,10 +213,41 @@ angular.module('smartEina')
                 });
             },
 
-            obtenerCentroide: function (nombreCapa, idUTC, idEDIFICIO) {
-                var urlCentroid = "http://ec2-18-222-45-196.us-east-2.compute.amazonaws.com:8080/geoserver/Labis/wps?service" +
-                    "=WFS&VERSION=1.0.0&request=GetCapabilities&typeName=" + nombreCapa + "&outputFormat=application%2Fjson&CQL_FILTER=" +
-                    "ID_UTC='" + idUTC + "'&ID_EDIFICI='" + idEDIFICIO + "'";
+            obtenerCoordenadas: function (idEspacio, callBack) {
+                console.log("IDEAOISUDAWD " + idEspacio)
+                $http({
+                    method: 'GET',
+                    url: '/obtenerCoordsDeEspacio',
+                    headers: {
+                        'idEspacio': idEspacio
+                    }
+                }).success(function(data, status, headers) {
+                    console.log("Coords: ", headers().coordenadas);
+                    callBack(JSON.parse(headers().coordenadas))
+                }).error(function() {
+                    callBack([]);
+                });
+            },
+
+            crearIncidencia: function (titulo, descripcion, idUsuario, planta, x, y, idEspacio, callBack) {
+                console.log("CREAMOS");
+                $http({
+                    method: 'POST',
+                    url: '/crearIncidencia',
+                    params: {
+                        'idEspacio': idEspacio,
+                        'titulo': titulo,
+                        'descripcion': descripcion,
+                        'idUsuario': idUsuario,
+                        'x': x,
+                        'y': y,
+                        'planta': planta
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack();
+                });
             }
         }
     });

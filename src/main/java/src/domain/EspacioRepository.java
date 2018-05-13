@@ -19,4 +19,6 @@ public interface EspacioRepository {
   Boolean deleteCeldaHorarioDelHorario(String idEspacio, String dia, int horaInicio);
 
   Horario horarioDeEspacioDeIncidencia(String idEspacio);
+
+  ArrayList<String> getCoordenadasByID(String idEspacio);
 }

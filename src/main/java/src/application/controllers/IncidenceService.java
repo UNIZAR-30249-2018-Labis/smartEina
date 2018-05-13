@@ -23,7 +23,7 @@ public class IncidenceService {
     protected IncidenciaRepository incidenciaRepository;
 
     @RequestMapping(value = "/obtenerIncidenciasDeUsuario", method = RequestMethod.GET)
-    public ResponseEntity<String> getInfo(HttpServletRequest request) {
+    public ResponseEntity<String> getIncidenciasUsuario(HttpServletRequest request) {
         String idUser = request.getHeader("idUser");
 
         ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasByUser(idUser);
@@ -31,6 +31,20 @@ public class IncidenceService {
         HttpHeaders headers = new HttpHeaders();
 
         String json = gson.toJson(a);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/obtenerIncidenciasDeEspacio", method = RequestMethod.GET)
+    public ResponseEntity<String> getIncidenciasEspacio(HttpServletRequest request) {
+        String idEspacio = request.getHeader("idEspacio");
+
+        ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasByEspacio(idEspacio);
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+
+        String json = gson.toJson(a);
+        System.out.println(json);
         headers.add("Incidencias", json);
         return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
     }
@@ -43,6 +57,7 @@ public class IncidenceService {
                                                   @RequestParam("y") float y,
                                                   @RequestParam("planta") String planta,
                                                   @RequestParam("idEspacio") String idEspacio) {
+        System.out.println("Estamos en el service creando");
         Localizacion localizacion = new Localizacion(null, idEspacio, x, y,planta);
         Incidencia incidencia = new Incidencia(null, titulo, desc, "PENDIENTE",idUsuario, "", localizacion);
         if (incidenciaRepository.addIncidencia(incidencia)) {
@@ -85,7 +100,7 @@ public class IncidenceService {
     public ResponseEntity<String> terminarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
 
-        if (incidenciaRepository.asignadaToFinalizada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "FINALIZADA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
+        if (incidenciaRepository.asignadaToFinalizada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "COMPLETADA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
             return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }

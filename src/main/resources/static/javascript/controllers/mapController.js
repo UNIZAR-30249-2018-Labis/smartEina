@@ -9,6 +9,8 @@ angular.module('smartEina')
         $scope.horario = null;
 
         var plantaActual = 0;
+        var latitude = 0;
+        var longitude = 0;
 
         $scope.misIncidenciasActive = false;
         $scope.incidenciasGeneralesActive = false;
@@ -26,6 +28,10 @@ angular.module('smartEina')
             } else  $scope.incidenciasGeneralesActive = false;
         };
 
+        $scope.incidenciasActivas = {
+
+        };
+
         $scope.incidenciasUserBasico = {
             "estado": "",
             "creadas": creadas = [],
@@ -35,6 +41,38 @@ angular.module('smartEina')
             "rechazadas": rechazadas = []
         };
 
+        $scope.markersUserBasico = {
+            "creadas": creadas = [],
+            "aceptadas": aceptadas = [],
+            "modificacion": modificacion = [],
+            "completadas": completadas = [],
+            "rechazadas": rechazadas = []
+        };
+
+        var crearMarkerUserBasico = function(incidencia, tipo) {
+            var m = {
+                lat: incidencia.localizacion.x,
+                lng: incidencia.localizacion.y,
+                focus: false,
+                draggable: false,
+                icon: {
+                    type: 'div',
+                    iconSize: [230, 0],
+                    html: '<span class="glyphicon glyphicon-wrench"></span>',
+                    popupAnchor:  [0, 0]
+                }
+            };
+
+            switch(tipo) {
+                case "creadas": $scope.markersUserBasico.creadas.push(m); break;
+                case "aceptadas": $scope.markersUserBasico.aceptadas.push(m); break;
+                case "modificacion": $scope.markersUserBasico.modificacion.push(m); break;
+                case "completadas": $scope.markersUserBasico.completadas.push(m); break;
+                case "rechazadas": $scope.markersUserBasico.rechazadas.push(m); break;
+            }
+        };
+
+
         var llenarIncidenciasUserBasico = function(data) {
             for (var i=0; i< data.length; i++) {
                 var incidencia = data[i];
@@ -42,31 +80,79 @@ angular.module('smartEina')
                 switch (incidencia.estado) {
                     case "PENDIENTE":
                         $scope.incidenciasUserBasico.creadas.push(incidencia);
+                        crearMarkerUserBasico(incidencia, "creadas");
                         break;
                     case "INCOMPLETA":
                         $scope.incidenciasUserBasico.modificacion.push(incidencia);
+                        crearMarkerUserBasico(incidencia, "modificacion");
                         break;
                     case "ACEPTADA":
                         $scope.incidenciasUserBasico.aceptadas.push(incidencia);
+                        crearMarkerUserBasico(incidencia, "aceptadas");
                         break;
                     case "ASIGNADA":
                         $scope.incidenciasUserBasico.aceptadas.push(incidencia);
+                        crearMarkerUserBasico(incidencia, "aceptadas");
                         break;
                     case "COMPLETADA":
                         $scope.incidenciasUserBasico.completadas.push(incidencia);
+                        crearMarkerUserBasico(incidencia, "completadas");
                         break;
                     case "RECHAZADA":
                         $scope.incidenciasUserBasico.rechazadas.push(incidencia);
+                        crearMarkerUserBasico(incidencia, "rechazadas");
                         break;
                 }
             }
-
             console.log($scope.incidenciasUserBasico)
         };
 
+        //map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
+       // map.obtenerTodasIncidenciasActivas(llenarIncidenciasActivas);
 
-        map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
+        var llenarIncidenciasActivas = function(data) {
+          // Aqui tratamos todas las activas despues de que nos la devuelva el services.js
+        };
 
+
+        $scope.verIncidencias = function() {
+            console.log("data ", $scope.data.idSelected);
+            var modalIncidencias = $uibModal.open({
+                templateUrl: 'templates/incidencias.html',
+                animation: true,
+                windowClass: 'modal',
+                keyboard: false,
+                controller: 'modalIncidenciasCtrl',
+                resolve: {
+                    idSelected: function () {
+                        return $scope.data.idSelected
+                    },
+                    plantaActual: function () {
+                        return plantaActual
+                    },
+                    userName: function () {
+                        return $scope.userName
+                    },
+                    map: function () {
+                        return map
+                    },
+                    uibModal: function () {
+                        return $uibModal
+                    },
+                    latitude: function() {
+                        return latitude
+                    },
+                    longitude: function() {
+                        return longitude
+                    }
+                }
+            });
+
+            modalIncidencias.result.then(function () {
+                console.log("Cerrado");
+            })
+
+        };
 
         $scope.basicLayer = {
             xyz: {
@@ -124,8 +210,8 @@ angular.module('smartEina')
 
         $scope.$on('leafletDirectiveMap.click', function (event, args) {
             var leafEvent = args.leafletEvent;
-            var latitude = leafEvent.latlng.lat;
-            var longitude = leafEvent.latlng.lng;
+            latitude = leafEvent.latlng.lat;
+            longitude = leafEvent.latlng.lng;
             var idWFS = map.obtenerId($scope.layers.overlays.active.layerParams.layers, latitude, longitude);
 
             idWFS.then(function (result) {
@@ -497,5 +583,149 @@ angular.module('smartEina')
                 actividad: $scope.actividad
             };
             map.guardarHora(datos, close)
+        };
+    })
+
+    .controller('modalIncidenciasCtrl', function ($scope, $uibModalInstance, idSelected, plantaActual, userName, map, uibModal, latitude, longitude) {
+        console.log("datax ", idSelected)
+        $scope.idSelected = idSelected;
+        $scope.plantaActual = plantaActual;
+        $scope.userName = userName;
+        $scope.map = map;
+        $scope.uibModal = uibModal;
+        $scope.latitude = latitude;
+        $scope.longitude = longitude;
+
+        console.log("detex ", $scope.idSelected);
+        $scope.incidenciasEspacio = [];
+
+        var llenarIncidenciasEspacio = function(data) {
+            $scope.incidenciasEspacio = [];
+            for (var i=0; i< data.length; i++) {
+                $scope.incidenciasEspacio.push(data[i])
+            }
+        };
+
+        $scope.map.obtenerIncidenciasDeEspacio($scope.idSelected, llenarIncidenciasEspacio);
+
+        $scope.crearIncidencia = function() {
+            var modalCrearIncidencia = $scope.uibModal.open({
+                templateUrl: 'templates/editarIncidencia.html',
+                animation: true,
+                windowClass: 'modal',
+                controller: 'modalEditarIncidenciaCtrl',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            modo: 'Crear',
+                            idUsuario: $scope.userName,
+                            idEspacio: $scope.idSelected,
+                            map: $scope.map,
+                            planta: $scope.plantaActual,
+                            latitude: $scope.latitude,
+                            longitude: $scope.longitude,
+                            titulo: "",
+                            descripcion: ""
+                        }
+                    }
+                },
+            });
+
+            modalCrearIncidencia.result.then(function () {
+                $scope.map.obtenerIncidenciasDeEspacio($scope.idSelected, llenarIncidenciasEspacio);
+            })
+        };
+
+        $scope.verIncidencia = function(incidencia) {
+            var modalVerIncidencia = $scope.uibModal.open({
+                templateUrl: 'templates/editarIncidencia.html',
+                animation: true,
+                windowClass: 'modal',
+                controller: 'modalEditarIncidenciaCtrl',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            modo: 'Ver',
+                            idUsuario: $scope.userName,
+                            idEspacio: $scope.idSelected,
+                            map: $scope.map,
+                            planta: $scope.plantaActual,
+                            latitude: $scope.latitude,
+                            longitude: $scope.longitude,
+                            titulo: incidencia.titulo,
+                            descripcion: incidencia.desc
+                        }
+                    }
+                },
+            });
+
+            modalVerIncidencia.result.then(function () {
+                $scope.map.obtenerIncidenciasDeEspacio($scope.idSelected, llenarIncidenciasEspacio);
+            })
+        };
+
+
+        var close = function () {
+            $uibModalInstance.close();
+        };
+    })
+
+    .controller('modalEditarIncidenciaCtrl', function ($scope, $uibModalInstance, data) {
+        $scope.modo = data.modo;
+        $scope.idUsuario = data.idUsuario;
+        $scope.idEspacio = data.idEspacio;
+        $scope.map = data.map;
+        $scope.planta = data.planta;
+        $scope.latitude = data.latitude;
+        $scope.longitude = data.longitude;
+
+        $scope.titulo = data.titulo;
+        $scope.descripcion = data.descripcion;
+
+        $scope.volver = function() {
+            close();
+        };
+
+        $scope.guardar = function() {
+            if ($scope.idEspacio == 'Exterior') {
+                crear();
+            } else {
+                console.log("From coords")
+                $scope.map.obtenerCoordenadas($scope.idEspacio, crearFromCoords);
+            }
+        };
+        // titulo, descripcion, idUsuario, planta, x, y, idEspacio, callBack
+        var crear = function() {
+            var p = "";
+            switch($scope.planta) {
+                case -1: p = "S1"; break;
+                case 0: p = "00"; break;
+                case 1: p = "01"; break;
+                case 2: p = "02"; break;
+                case 3: p = "03"; break;
+                case 4: p = "04"; break;
+            }
+
+            $scope.map.crearIncidencia($scope.titulo, $scope.descripcion, $scope.idUsuario,p, latitude, longitude, $scope.idEspacio, close);
+        };
+
+        var crearFromCoords = function(data) {
+            var p = "";
+            switch($scope.planta) {
+                case -1: p = "S1"; break;
+                case 0: p = "00"; break;
+                case 1: p = "01"; break;
+                case 2: p = "02"; break;
+                case 3: p = "03"; break;
+                case 4: p = "04"; break;
+            }
+            console.log("dentro de coords " + data)
+            $scope.map.crearIncidencia($scope.titulo, $scope.descripcion, $scope.idUsuario,p, data[0], data[1], $scope.idEspacio, close);
+        };
+
+        var close = function () {
+            $uibModalInstance.close();
         };
     });

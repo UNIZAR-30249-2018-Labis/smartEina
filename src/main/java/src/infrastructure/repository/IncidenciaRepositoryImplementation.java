@@ -59,7 +59,7 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
       public PreparedStatement createPreparedStatement(Connection connection)
               throws SQLException {
         PreparedStatement ps = connection.prepareStatement(SQL,
-                new String[] { "idIncidencia"});
+                new String[] { "idincidencia"});
         ps.setString(1, incidencia.getTitulo());
         ps.setString(2, incidencia.getEstado());
         ps.setString(3, incidencia.getDesc());
@@ -126,7 +126,6 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
 
       for (Map<String, Object> row: rows) {
         Integer idEntero = (Integer)row.get("idIncidencia");
-        System.out.println(idEntero);
         ids.add(String.valueOf(idEntero));
       }
 
@@ -157,12 +156,86 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
         Incidencia incidencia = findIncidenciaByID(s);
         incidencias.add(incidencia);
       }
-
       return incidencias;
     }
     catch (EmptyResultDataAccessException e){
       return null;
     }
+  }
+
+  @Override
+  public ArrayList<Incidencia> findAllIncidenciasAceptadas() {
+    ArrayList<Incidencia> incidenciaPreTrabajador = new ArrayList<>();
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    try {
+      String SQL = "SELECT * FROM public.tb_incidencias WHERE estado = 'ACEPTADA' OR estado = 'ASIGNADA'";
+      List<Incidencia> list = jdbc.query(SQL, new Object[] {}, incidenciaMapper);
+
+      SQL = "SELECT * FROM public.tb_incidenciasuser WHERE idIncidencia = ?";
+
+      for (Incidencia i: list) {
+        Map<String, Object> row = jdbc.queryForMap(SQL, Integer.parseInt(i.getId()));
+        incidenciaPreTrabajador.add(new Incidencia(i.getId(),i.getTitulo(), i.getDesc(), i.getEstado(),(String) row.get("idUser"),null,i.getLocalizacion()));
+      }
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+    // Buscamos trabajadores
+    for (Incidencia i: incidenciaPreTrabajador) {
+      if (i.getEstado().equals("ASIGNADA")) {
+        String SQL = "SELECT * FROM public.tb_incidenciastrabajador WHERE idIncidencia = ?";
+        try {
+          Map<String, Object> row = jdbc.queryForMap(SQL, Integer.parseInt(i.getId()));
+          String idTrabajador = (String) row.get("IdTrabajador");
+          incidencias.add(new Incidencia(i.getId(), i.getTitulo(), i.getDesc(), i.getEstado(), i.getIdUsuario(), idTrabajador, i.getLocalizacion()));
+        } catch( EmptyResultDataAccessException e) {
+          incidencias.add(new Incidencia(i.getId(), i.getTitulo(), i.getDesc(), i.getEstado(), i.getIdUsuario(), "", i.getLocalizacion()));
+        }
+      } else {
+        incidencias.add(new Incidencia(i.getId(), i.getTitulo(), i.getDesc(), i.getEstado(), i.getIdUsuario(), "", i.getLocalizacion()));
+      }
+    }
+    return incidencias;
+  }
+
+  @Override
+  public ArrayList<Incidencia> findAllIncidencias() {
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    ArrayList<String> ids = new ArrayList();
+    try{
+      String SQL = "SELECT * FROM public.tb_incidenciasuser";
+      List<Map<String, Object>> rows = jdbc.queryForList(SQL, new Object[] {});
+
+      for (Map<String, Object> row: rows) {
+        ids.add(String.valueOf(row.get("idIncidencia")));
+      }
+
+      for (String s : ids) {
+        Incidencia incidencia = findIncidenciaByID(s);
+        incidencias.add(incidencia);
+      }
+
+      return incidencias;
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+  }
+
+  @Override
+  public ArrayList<Incidencia> findAllIncidenciasByEspacio(String idEspacio) {
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    String SQL = "SELECT * FROM public.tb_localizacion WHERE idEspacio = ?";
+    try {
+      List<Map<String, Object>> list = jdbc.queryForList(SQL, idEspacio);
+
+      for(Map row: list) {
+        incidencias.add(findIncidenciaByID(((Integer) row.get("idIncidencia")).toString()));
+      }
+
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+    return incidencias;
   }
 
   @Override
