@@ -204,9 +204,22 @@ public class IncidenceServiceTest {
             ids.add(id);
         }
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasAceptadas();
-        for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
-        assertTrue(listaIncidencias.size() >=  5);
+        System.out.println(listaIncidencias.size());
+        //for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
+        for(int i = 0; i<ids.size(); i++) {
+
+            Boolean existeInicidencia = false;
+            for ( Incidencia inci : listaIncidencias) {
+                if (inci.getId().equals(ids.get(i))) {
+                    existeInicidencia = true;
+                }
+            }
+            assertTrue(existeInicidencia);
+        }
+
         for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
 
     }
+
+
 }
