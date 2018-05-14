@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import src.application.domain.Email;
+import src.application.domain.EmailRepository;
+import src.application.domain.User;
+import src.application.domain.UserRepository;
 import src.domain.Incidencia;
 import src.domain.IncidenciaRepository;
 import src.domain.Localizacion;
@@ -21,6 +25,12 @@ public class IncidenceService {
 
     @Autowired
     protected IncidenciaRepository incidenciaRepository;
+
+    @Autowired
+    protected UserRepository userRepository;
+
+    @Autowired
+    protected EmailRepository emailRepository;
 
     @RequestMapping(value = "/obtenerIncidenciasDeUsuario", method = RequestMethod.GET)
     public ResponseEntity<String> getIncidenciasUsuario(HttpServletRequest request) {
@@ -133,7 +143,11 @@ public class IncidenceService {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
 
         if (incidenciaRepository.asignadaToFinalizada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "COMPLETADA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
-            return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            User user = userRepository.findByName(incidencia.getIdUsuario());
+            Email email = new Email("admin.smartEina@gmail.com", user.getEmail(), "Incidencia \"" + incidencia.getId() + "\" completada!", "Su incidencia ha sido completada.");
+            if (emailRepository.sendEmail(email)) {
+                return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
@@ -141,7 +155,11 @@ public class IncidenceService {
     public ResponseEntity<String> aceptarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
         if (incidenciaRepository.pendienteToAceptada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ACEPTADA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
-            return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            User user = userRepository.findByName(incidencia.getIdUsuario());
+            Email email = new Email("admin.smartEina@gmail.com", user.getEmail(), "Incidencia \"" + incidencia.getId() + "\" aceptada!", "Su incidencia ha sido aceptada.");
+            if (emailRepository.sendEmail(email)) {
+                return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
@@ -149,7 +167,11 @@ public class IncidenceService {
     public ResponseEntity<String> rechazarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
         if (incidenciaRepository.pendienteToRechazada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "RECHAZADA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
-            return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            User user = userRepository.findByName(incidencia.getIdUsuario());
+            Email email = new Email("admin.smartEina@gmail.com", user.getEmail(), "Incidencia \"" + incidencia.getId() + "\" rechazada!", "Su incidencia ha sido rechazada.");
+            if (emailRepository.sendEmail(email)) {
+                return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
@@ -157,7 +179,11 @@ public class IncidenceService {
     public ResponseEntity<String> incompletarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
         if (incidenciaRepository.pendienteToIncompleta(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "INCOMPLETA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
-            return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            User user = userRepository.findByName(incidencia.getIdUsuario());
+            Email email = new Email("admin.smartEina@gmail.com", user.getEmail(), "Incidencia \"" + incidencia.getId() + "\" pendiente de modificación!", "Es necesario que especifique mejor su incidencia.");
+            if (emailRepository.sendEmail(email)) {
+                return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
