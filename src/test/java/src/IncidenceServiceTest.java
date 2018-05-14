@@ -221,5 +221,22 @@ public class IncidenceServiceTest {
 
     }
 
+    @Test
+    public void sacarTodasIncidencias() {
+
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidencias();
+        Integer numeroIncidencias = listaIncidencias.size();
+
+        System.out.println(numeroIncidencias);
+
+        Localizacion loc = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia inci = new Incidencia("01", "Prueba", "desc", "PENDIENTE","3","3",loc);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(inci);
+
+        assertTrue(incidenciaRepository.findAllIncidencias().size()==numeroIncidencias+1);
+
+        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    }
+
 
 }
