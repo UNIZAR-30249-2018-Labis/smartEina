@@ -35,6 +35,18 @@ public class IncidenceService {
         return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/obtenerTodasIncidencias", method = RequestMethod.GET)
+    public ResponseEntity<String> getAllIncidencias(HttpServletRequest request) {
+
+        ArrayList<Incidencia> a = incidenciaRepository.findAllIncidencias();
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+
+        String json = gson.toJson(a);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/obtenerIncidenciasDeEspacio", method = RequestMethod.GET)
     public ResponseEntity<String> getIncidenciasEspacio(HttpServletRequest request) {
         String idEspacio = request.getHeader("idEspacio");
@@ -44,7 +56,6 @@ public class IncidenceService {
         HttpHeaders headers = new HttpHeaders();
 
         String json = gson.toJson(a);
-        System.out.println(json);
         headers.add("Incidencias", json);
         return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
     }
@@ -56,7 +67,17 @@ public class IncidenceService {
         HttpHeaders headers = new HttpHeaders();
 
         String json = gson.toJson(a);
-        System.out.println(json);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/obtenerIncidenciasCreadas", method = RequestMethod.GET)
+    public ResponseEntity<String> getIncidenciasCreadas(HttpServletRequest request) {
+        ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasCreadas();
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+
+        String json = gson.toJson(a);
         headers.add("Incidencias", json);
         return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
     }
@@ -69,7 +90,6 @@ public class IncidenceService {
                                                   @RequestParam("y") float y,
                                                   @RequestParam("planta") String planta,
                                                   @RequestParam("idEspacio") String idEspacio) {
-        System.out.println("Estamos en el service creando");
         Localizacion localizacion = new Localizacion(null, idEspacio, x, y,planta);
         Incidencia incidencia = new Incidencia(null, titulo, desc, "PENDIENTE",idUsuario, "", localizacion);
         if (incidenciaRepository.addIncidencia(incidencia)) {

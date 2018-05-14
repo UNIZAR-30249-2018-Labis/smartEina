@@ -46,4 +46,20 @@
             <button ng-click="volver()" class="btn btn-primary text-center">Volver</button>
         </div>
     </div>
+    <div ng-show="modo == 'EditarIncompleta'">
+        <div class="form-group">
+            <label for="espacioEditarIncompleta">Espacio:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="espacioEditarIncompleta" value="{{idEspacio}}">
+            <label for="usuarioEditarIncompleta">Usuario:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="usuarioEditarIncompleta" value="{{idUsuario}}">
+            <label for="tituloEditarIncompleta">Titulo:</label>
+            <input type="text" class="form-control" id="tituloEditarIncompleta" ng-model="titulo">
+            <label for="descripcionEditarIncompleta">Descripcion:</label>
+            <input type="text" class="form-control" id="descripcionEditarIncompleta" ng-model="descripcion">
+        </div>
+        <div>
+            <button ng-click="actualizarIncompleta()" class="btn btn-primary text-center">Actualizar</button>
+            <button ng-click="volver()" class="btn btn-primary text-center">Volver</button>
+        </div>
+    </div>
 </div>

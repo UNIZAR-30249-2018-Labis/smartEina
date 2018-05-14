@@ -129,10 +129,78 @@ angular.module('smartEina')
                 });
             },
 
+            aceptarIncidencia: function(idIncidencia, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/aceptarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
+            rechazarIncidencia: function(idIncidencia, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/rechazarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
+            pedirModificarIncidencia: function(idIncidencia, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/incompletarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
+            pedirModificarModificada: function(idIncidencia, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/pendientarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
             obtenerIncidenciasActivas: function(callBack) {
                 $http({
                     method: 'GET',
                     url: '/obtenerIncidenciasActivas',
+                    headers: {}
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
+            obtenerIncidenciasCreadas: function(callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasCreadas',
                     headers: {}
                 }).success(function(data, status, headers) {
                     callBack(JSON.parse(headers().incidencias))
@@ -148,6 +216,18 @@ angular.module('smartEina')
                     headers: {
                         'idUser': idUser
                     }
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
+            obtenerTodasLasIncidencias: function(callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerTodasIncidencias',
+                    headers: {}
                 }).success(function(data, status, headers) {
                     callBack(JSON.parse(headers().incidencias))
                 }).error(function() {

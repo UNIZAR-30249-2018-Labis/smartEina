@@ -1,151 +1,214 @@
 <div style="margin-top: 70px">
     <div class="row" style="margin-left:20px; margin-bottom: 20px; ">
         <div class="col-md-5">
-            <div class="panel panel-default">
-                <div class="panel-heading" ng-click="switchIncidenciasGeneralesActive()">
-                    <h2>Incidencias</h2>
+            <div ng-if="userType == 'Basico'">
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchIncidenciasGeneralesActive()">
+                        <h2>Incidencias</h2>
+                    </div>
+                    <div ng-show="incidenciasGeneralesActive" class="panel-body">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="col-md-9">Nombre</th>
+                                <th class="col-md-1">Ver</th>
+                                <th class="col-md-1">Centrar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="incidencia in incidenciasActivas">
+                                <th scope="row">{{incidencia.titulo}}</th>
+                                <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div ng-show="incidenciasGeneralesActive" class="panel-body">
-                    <table class="table table-bordered table-striped table-hover">
-                        <thead>
-                        <tr class="table-head">
-                            <th class="col-md-9">Nombre</th>
-                            <th class="col-md-1">Ver</th>
-                            <th class="col-md-1">Centrar</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="incidencia in incidenciasActivas">
-                            <th scope="row">{{incidencia.titulo}}</th>
-                            <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
-                            <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchMisIncidenciasActive()">
+                        <h2>Mis incidencias</h2>
+                    </div>
+                    <div ng-show="misIncidenciasActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'creadas'">
+                                <h4>Creadas </h4>
+                            </div>
+                            <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'creadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-9">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Editar</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in incidenciasUserBasico.creadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="editarIncidencia(incidencia)" class="btn btn-primary">Editar</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'aceptadas'">
+                                <h4>Activas</h4>
+                            </div>
+                            <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'aceptadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-10">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in incidenciasUserBasico.aceptadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div  class="panel panel-warning">
+                            <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'modificar'">
+                                <h4>Pendientes de modificación</h4>
+                            </div>
+                            <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'modificar'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-9">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Editar</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in incidenciasUserBasico.modificacion">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="editarIncidenciaIncompleta(incidencia)" class="btn btn-primary">Editar</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-success">
+                            <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'finalizadas'">
+                                <h4>Finalizadas</h4>
+                            </div>
+                            <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'finalizadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-10">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in incidenciasUserBasico.finalizadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div  class="panel panel-danger">
+                            <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'rechazadas'">
+                                <h4>Rechazadas</h4>
+                            </div>
+                            <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'rechazadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-10">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in incidenciasUserBasico.rechazadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading" ng-click="switchMisIncidenciasActive()">
-                    <h2>Mis incidencias</h2>
-                </div>
-                <div ng-show="misIncidenciasActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'creadas'">
-                            <h4>Creadas </h4>
-                        </div>
-                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'creadas'">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                <tr class="table-head">
-                                    <th class="col-md-9">Nombre</th>
-                                    <th class="col-md-1">Ver</th>
-                                    <th class="col-md-1">Editar</th>
-                                    <th class="col-md-1">Centrar</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="incidencia in incidenciasUserBasico.creadas">
-                                    <th scope="row">{{incidencia.titulo}}</th>
-                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
-                                    <td><button ng-click="editarIncidencia(incidencia)" class="btn btn-primary">Editar</button></td>
-                                    <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div ng-if="userType == 'Administrador'">
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchAdministrarIncidenciasActive()">
+                        <h2>Administración de incidencias</h2>
                     </div>
-                    <div class="panel panel-info">
-                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'aceptadas'">
-                            <h4>Activas</h4>
+                    <div ng-show="administrarIncidenciasActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" ng-click="allIncidencias.estado = 'creadas'">
+                                <h4>Creadas </h4>
+                            </div>
+                            <div class="panel-body" ng-show="allIncidencias.estado == 'creadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-7">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Aceptar</th>
+                                        <th class="col-md-1">Incompleta</th>
+                                        <th class="col-md-1">Rechazar</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in allIncidencias.creadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="aceptarIncidencia(incidencia)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span></button></td>
+                                        <td><button ng-click="pedirModificarIncidencia(incidencia)" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></button></td>
+                                        <td><button ng-click="rechazarIncidencia(incidencia)" class="btn btn-error"><span class="glyphicon glyphicon-remove"></span></button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'aceptadas'">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                <tr class="table-head">
-                                    <th class="col-md-10">Nombre</th>
-                                    <th class="col-md-1">Ver</th>
-                                    <th class="col-md-1">Centrar</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="incidencia in incidenciasUserBasico.aceptadas">
-                                    <th scope="row">{{incidencia.titulo}}</th>
-                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
-                                    <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div  class="panel panel-warning">
-                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'modificar'">
-                            <h4>Pendientes de modificación</h4>
-                        </div>
-                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'modificar'">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                <tr class="table-head">
-                                    <th class="col-md-9">Nombre</th>
-                                    <th class="col-md-1">Ver</th>
-                                    <th class="col-md-1">Editar</th>
-                                    <th class="col-md-1">Centrar</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="incidencia in incidenciasUserBasico.modificar">
-                                    <th scope="row">{{incidencia.titulo}}</th>
-                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
-                                    <td><button ng-click="editarIncidencia(incidencia)" class="btn btn-primary">Editar</button></td>
-                                    <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="panel panel-success">
-                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'finalizadas'">
-                            <h4>Finalizadas</h4>
-                        </div>
-                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'finalizadas'">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                <tr class="table-head">
-                                    <th class="col-md-10">Nombre</th>
-                                    <th class="col-md-1">Ver</th>
-                                    <th class="col-md-1">Centrar</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="incidencia in incidenciasUserBasico.finalizadas">
-                                    <th scope="row">{{incidencia.titulo}}</th>
-                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
-                                    <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div  class="panel panel-danger">
-                        <div class="panel-heading" ng-click="incidenciasUserBasico.estado = 'rechazadas'">
-                            <h4>Rechazadas</h4>
-                        </div>
-                        <div class="panel-body" ng-show="incidenciasUserBasico.estado == 'rechazadas'">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                <tr class="table-head">
-                                    <th class="col-md-10">Nombre</th>
-                                    <th class="col-md-1">Ver</th>
-                                    <th class="col-md-1">Centrar</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="incidencia in incidenciasUserBasico.rechazadas">
-                                    <th scope="row">{{incidencia.titulo}}</th>
-                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
-                                    <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" ng-click="allIncidencias.estado = 'aceptadas'">
+                                <h4>Activas</h4>
+                            </div>
+                            <div class="panel-body" ng-show="allIncidencias.estado == 'aceptadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-10">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in allIncidencias.aceptadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

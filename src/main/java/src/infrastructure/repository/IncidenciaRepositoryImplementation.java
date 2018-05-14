@@ -200,6 +200,28 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
   }
 
   @Override
+  public ArrayList<Incidencia> findAllIncidenciasCreadas() {
+
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    try {
+      String SQL = "SELECT * FROM public.tb_incidencias WHERE estado = 'PENDIENTE'";
+      List<Incidencia> list = jdbc.query(SQL, new Object[] {}, incidenciaMapper);
+
+      SQL = "SELECT * FROM public.tb_incidenciasuser WHERE idIncidencia = ?";
+
+      for (Incidencia i: list) {
+        Map<String, Object> row = jdbc.queryForMap(SQL, Integer.parseInt(i.getId()));
+        Localizacion localizacion = findLocalizacionByIDIncidencia(i.getId());
+        incidencias.add(new Incidencia(i.getId(),i.getTitulo(), i.getDesc(), i.getEstado(),(String) row.get("idUser"),"",localizacion));
+      }
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+
+    return incidencias;
+  }
+
+  @Override
   public ArrayList<Incidencia> findAllIncidencias() {
     ArrayList<Incidencia> incidencias = new ArrayList<>();
     ArrayList<String> ids = new ArrayList();

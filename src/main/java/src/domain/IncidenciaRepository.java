@@ -14,6 +14,8 @@ public interface IncidenciaRepository {
 
   ArrayList<Incidencia> findAllIncidenciasAceptadas();
 
+  ArrayList<Incidencia> findAllIncidenciasCreadas();
+
   ArrayList<Incidencia> findAllIncidenciasByEspacio(String idEspacio);
 
   boolean addIncidencia(Incidencia incidencia);
