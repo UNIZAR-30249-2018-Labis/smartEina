@@ -148,6 +148,7 @@ public class IncidenceServiceTest {
         espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Miercoles",16);
         espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Jueves",10);
         espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Viernes",12);
+        incidenciaRepository.deleteIncidenciaByID(id);
     }
 
     @Test
@@ -178,13 +179,13 @@ public class IncidenceServiceTest {
         Incidencia incidencia;
         ArrayList<String> ids = new ArrayList<>();
         for( int i = 0; i < 5 ; i++){
-            incidencia = new Incidencia(String.valueOf(i) ,"Test_espacio" + i,"TEST_espacio","PENDIENTE",username,"99",l);
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_espacio" + i,"TEST_espacio","ACEPTADA",username,"99",l);
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
             ids.add(id);
         }
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByEspacio(l.getIdEspacio());
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
-        assertTrue(listaIncidencias.size() ==  5);
+        assertTrue(listaIncidencias.size() >=  5);
         for(String elId : ids) incidenciaRepository.deleteIncidenciaByID(elId);
 
     }
@@ -204,7 +205,7 @@ public class IncidenceServiceTest {
         }
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasAceptadas();
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
-        assertTrue(listaIncidencias.size() ==  5);
+        assertTrue(listaIncidencias.size() >=  5);
         for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
 
     }
