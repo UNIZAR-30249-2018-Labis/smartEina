@@ -22,15 +22,12 @@ angular.module('smartEina')
         };
 
         $scope.switchIncidenciasGeneralesActive = function() {
-            console.log("Estamos inn")
             if ( $scope.incidenciasGeneralesActive == false) {
                 $scope.incidenciasGeneralesActive = true;
             } else  $scope.incidenciasGeneralesActive = false;
         };
 
-        $scope.incidenciasActivas = {
-
-        };
+        $scope.incidenciasActivas = [];
 
         $scope.incidenciasUserBasico = {
             "estado": "",
@@ -50,6 +47,14 @@ angular.module('smartEina')
         };
 
         var crearMarkerUserBasico = function(incidencia, tipo) {
+            $scope.markersUserBasico = {
+                "creadas": creadas = [],
+                "aceptadas": aceptadas = [],
+                "modificacion": modificacion = [],
+                "completadas": completadas = [],
+                "rechazadas": rechazadas = []
+            };
+
             var m = {
                 lat: incidencia.localizacion.x,
                 lng: incidencia.localizacion.y,
@@ -74,6 +79,15 @@ angular.module('smartEina')
 
 
         var llenarIncidenciasUserBasico = function(data) {
+            $scope.incidenciasUserBasico = {
+                "estado": "",
+                "creadas": creadas = [],
+                "aceptadas": aceptadas = [],
+                "modificacion": modificacion = [],
+                "completadas": completadas = [],
+                "rechazadas": rechazadas = []
+            };
+
             for (var i=0; i< data.length; i++) {
                 var incidencia = data[i];
                 console.log(incidencia);
@@ -107,13 +121,100 @@ angular.module('smartEina')
             console.log($scope.incidenciasUserBasico)
         };
 
-        //map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
-       // map.obtenerTodasIncidenciasActivas(llenarIncidenciasActivas);
-
         var llenarIncidenciasActivas = function(data) {
-          // Aqui tratamos todas las activas despues de que nos la devuelva el services.js
+            $scope.incidenciasActivas = [];
+            for (var i = 0; i< data.length; i++) {
+                $scope.incidenciasActivas.push(data[i]);
+            }
+
         };
 
+        map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
+        map.obtenerIncidenciasActivas(llenarIncidenciasActivas);
+
+        $scope.verIncidencia = function(incidencia) {
+            var modalVerIncidencia = $uibModal.open({
+                templateUrl: 'templates/editarIncidencia.html',
+                animation: true,
+                windowClass: 'modal',
+                controller: 'modalEditarIncidenciaCtrl',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            modo: 'Ver',
+                            idUsuario: incidencia.idUsuario,
+                            idEspacio: incidencia.localizacion.idEspacio,
+                            map: map,
+                            planta: incidencia.localizacion.planta,
+                            latitude:incidencia.localizacion.y,
+                            longitude: incidencia.localizacion.x,
+                            titulo: incidencia.titulo,
+                            descripcion: incidencia.desc,
+                            idIncidencia: incidencia.id
+                        }
+                    }
+                },
+            });
+
+            modalVerIncidencia.result.then(function () {
+                map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
+                map.obtenerIncidenciasActivas(llenarIncidenciasActivas);
+            })
+        };
+
+        $scope.editarIncidencia = function(incidencia) {
+            var modalEditarIncidencia = $uibModal.open({
+                templateUrl: 'templates/editarIncidencia.html',
+                animation: true,
+                windowClass: 'modal',
+                controller: 'modalEditarIncidenciaCtrl',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            modo: 'Editar',
+                            idUsuario: incidencia.idUsuario,
+                            idEspacio: incidencia.localizacion.idEspacio,
+                            map: map,
+                            planta: incidencia.localizacion.planta,
+                            latitude:incidencia.localizacion.y,
+                            longitude: incidencia.localizacion.x,
+                            titulo: incidencia.titulo,
+                            descripcion: incidencia.desc,
+                            idIncidencia: incidencia.id
+                        }
+                    }
+                },
+            });
+
+            modalEditarIncidencia.result.then(function () {
+                map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
+                map.obtenerIncidenciasActivas(llenarIncidenciasActivas);
+            })
+        };
+
+        $scope.centrarIncidencia = function(incidencia) {
+            console.log(incidencia)
+            $scope.irPlanta(incidencia.localizacion.planta);
+            angular.extend($scope, {
+                cps: {
+                    lat: incidencia.localizacion.y,
+                    lng: incidencia.localizacion.x,
+                    zoom: 22
+                }
+            });
+        };
+
+        $scope.centrar = function() {
+            angular.extend($scope, {
+                cps: {
+                    lat: 41.684106,
+                    lng: -0.887497,
+                    zoom: 17
+                }
+            });
+        };
 
         $scope.verIncidencias = function() {
             console.log("data ", $scope.data.idSelected);
@@ -149,7 +250,6 @@ angular.module('smartEina')
             });
 
             modalIncidencias.result.then(function () {
-                console.log("Cerrado");
             })
 
         };
@@ -162,8 +262,9 @@ angular.module('smartEina')
                 layerOptions: {
                     visible: false,
                     attribution: '',
-                    "showOnSelector": false
-
+                    "showOnSelector": false,
+                    minZoom: 10,
+                    maxZoom: 21
                 }
             }
         };
@@ -181,7 +282,7 @@ angular.module('smartEina')
             cps: {
                 lat: 41.684106,
                 lng: -0.887497,
-                zoom: 19
+                zoom: 17
             },
             events: {
                 map: {
@@ -276,6 +377,41 @@ angular.module('smartEina')
 
         $scope.clearMarkers = function () {
             $scope.data.markers = {};
+        };
+
+        $scope.irPlanta = function(planta) {
+            switch(planta) {
+                case "S1":
+                    plantaActual = -1;
+                    $scope.layers.overlays.active = $scope.definedOverlays.sotano;
+                    $scope.layers.overlays.active.doRefresh = true;
+                    break;
+                case "00":
+                    plantaActual = 0;
+                    $scope.layers.overlays.active = $scope.definedOverlays.planta0;
+                    $scope.layers.overlays.active.doRefresh = true;
+                    break;
+                case "01":
+                    plantaActual = 1;
+                    $scope.layers.overlays.active = $scope.definedOverlays.planta1;
+                    $scope.layers.overlays.active.doRefresh = true;
+                    break;
+                case "02":
+                    plantaActual = 2;
+                    $scope.layers.overlays.active = $scope.definedOverlays.planta2;
+                    $scope.layers.overlays.active.doRefresh = true;
+                    break;
+                case "03":
+                    plantaActual = 3;
+                    $scope.layers.overlays.active = $scope.definedOverlays.planta3;
+                    $scope.layers.overlays.active.doRefresh = true;
+                    break;
+                case "04":
+                    plantaActual = 4;
+                    $scope.layers.overlays.active = $scope.definedOverlays.planta4;
+                    $scope.layers.overlays.active.doRefresh = true;
+                    break;
+            };
         };
 
         $scope.subirPlanta = function () {
@@ -655,7 +791,8 @@ angular.module('smartEina')
                             latitude: $scope.latitude,
                             longitude: $scope.longitude,
                             titulo: incidencia.titulo,
-                            descripcion: incidencia.desc
+                            descripcion: incidencia.desc,
+                            idIncidencia: incidencia.id
                         }
                     }
                 },
@@ -680,12 +817,17 @@ angular.module('smartEina')
         $scope.planta = data.planta;
         $scope.latitude = data.latitude;
         $scope.longitude = data.longitude;
+        $scope.idIncidencia = data.idIncidencia;
 
         $scope.titulo = data.titulo;
         $scope.descripcion = data.descripcion;
 
         $scope.volver = function() {
             close();
+        };
+
+        $scope.actualizar = function() {
+            $scope.map.actualizarIncidencia($scope.titulo, $scope.descripcion, $scope.idIncidencia, close)
         };
 
         $scope.guardar = function() {

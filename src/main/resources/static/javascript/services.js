@@ -129,6 +129,18 @@ angular.module('smartEina')
                 });
             },
 
+            obtenerIncidenciasActivas: function(callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasActivas',
+                    headers: {}
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
             obtenerIncidenciasDeUsuario: function(idUser, callBack) {
                 $http({
                     method: 'GET',
@@ -184,7 +196,9 @@ angular.module('smartEina')
                         layers: nombreCapa,
                         format: 'image/png',
                         transparent: true,
-                        "showOnSelector": false
+                        "showOnSelector": false,
+                        minZoom: 10,
+                        maxZoom: 21
                     },
                     layerOptions: {
                         attribution: "",
@@ -226,6 +240,22 @@ angular.module('smartEina')
                     callBack(JSON.parse(headers().coordenadas))
                 }).error(function() {
                     callBack([]);
+                });
+            },
+
+            actualizarIncidencia: function (titulo, descripcion, idIncidencia, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/updateIncidencia',
+                    params: {
+                        'idIncidencia': idIncidencia,
+                        'titulo': titulo,
+                        'descripcion': descripcion,
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack();
                 });
             },
 

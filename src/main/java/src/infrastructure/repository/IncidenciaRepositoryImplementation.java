@@ -175,7 +175,8 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
 
       for (Incidencia i: list) {
         Map<String, Object> row = jdbc.queryForMap(SQL, Integer.parseInt(i.getId()));
-        incidenciaPreTrabajador.add(new Incidencia(i.getId(),i.getTitulo(), i.getDesc(), i.getEstado(),(String) row.get("idUser"),null,i.getLocalizacion()));
+        Localizacion localizacion = findLocalizacionByIDIncidencia(i.getId());
+        incidenciaPreTrabajador.add(new Incidencia(i.getId(),i.getTitulo(), i.getDesc(), i.getEstado(),(String) row.get("idUser"),null,localizacion));
       }
     } catch (EmptyResultDataAccessException e) {
       return null;
@@ -229,7 +230,10 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
       List<Map<String, Object>> list = jdbc.queryForList(SQL, idEspacio);
 
       for(Map row: list) {
-        incidencias.add(findIncidenciaByID(((Integer) row.get("idIncidencia")).toString()));
+        Incidencia incidencia = findIncidenciaByID(((Integer) row.get("idIncidencia")).toString());
+        if (incidencia.getEstado().equals("ACEPTADA") || incidencia.getEstado().equals("ASIGNADA")) {
+          incidencias.add(incidencia);
+        }
       }
 
     } catch (EmptyResultDataAccessException e) {
@@ -353,21 +357,6 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
   }
 
   @Override
-  public boolean addLocalizacion(String idIncidencia, float x, float y, String planta, String idEspacio) {
-    String SQL;
-    if (findLocalizacionByIDIncidencia(idIncidencia) != null) {
-      return false;
-    } else {
-      SQL = "INSERT INTO public.tb_localizacion(\n"
-              + "\tidIncidencia, x, y, planta, idEspacio)\n"
-              + "\tVALUES (?, ?, ?, ?, ?);";
-      if (jdbc.update(SQL, idIncidencia, x, y, planta, idEspacio) == 0) {
-        return false;
-      } else return true;
-    }
-  }
-
-  @Override
   public boolean deleteLocalizacionByIDIncidencia(String idIncidencia) {
     String SQL;
     if (findLocalizacionByIDIncidencia(idIncidencia) != null) {
@@ -377,57 +366,6 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
       if (jdbc.update(SQL, idIncidencia) == 0) {
         return false;
       } else return true;
-    }
-  }
-
-  @Override
-  public ArrayList<Incidencia> findIncidenciasBySala(String idEspacio) {
-    ArrayList<Incidencia> incidencias = new ArrayList<>();
-    ArrayList<String> ids = new ArrayList<>();
-    try{
-      String SQL = "SELECT * FROM public.tb_localizacion WHERE idespacio = ?";
-      List<Map<String, Object>> rows = jdbc.queryForList(SQL, new Object[] {idEspacio});
-
-      for (Map<String, Object> row: rows) {
-        ids.add(String.valueOf(row.get("idIncidencia")));
-      }
-
-      for (String s : ids) {
-        Incidencia incidencia = findIncidenciaByID(s);
-        incidencias.add(incidencia);
-      }
-
-      return incidencias;
-    }
-    catch (EmptyResultDataAccessException e){
-      return null;
-    }
-
-  }
-
-  @Override
-  public ArrayList<Incidencia> findIncidenciasAceptadas() {
-    ArrayList<Incidencia> incidenciasActivas = new ArrayList<>();
-    ArrayList<String> idsDeIncidencias = new ArrayList<>();
-    try{
-      String SQL = "SELECT * FROM public.tb_incidencias WHERE estado = 'ACEPTADA'";
-      List<Map<String, Object>> rows = jdbc.queryForList(SQL);
-
-      for (Map<String, Object> row: rows) {
-        Integer idEntero = (Integer)row.get("idIncidencia");
-        System.out.println(idEntero);
-        idsDeIncidencias.add(String.valueOf(idEntero));
-      }
-
-      for (String s : idsDeIncidencias) {
-        Incidencia incidencia = findIncidenciaByID(s);
-        incidenciasActivas.add(incidencia);
-      }
-
-      return incidenciasActivas;
-    }
-    catch (EmptyResultDataAccessException e){
-      return null;
     }
   }
 

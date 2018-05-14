@@ -38,14 +38,7 @@ public interface IncidenciaRepository {
 
   Localizacion findLocalizacionByIDIncidencia(String idIncidencia);
 
-  boolean addLocalizacion(String idIncidencia, float x, float y, String planta, String idEspacio);
-
   boolean deleteLocalizacionByIDIncidencia(String idIncidencia);
-
-  ArrayList<Incidencia> findIncidenciasBySala(String idEspacio);
-
-  ArrayList<Incidencia> findIncidenciasAceptadas();
-
 
   String addIncidenciaTest(Incidencia incidencia);
 }

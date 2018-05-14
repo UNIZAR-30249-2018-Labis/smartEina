@@ -30,4 +30,20 @@
             <button ng-click="volver()" class="btn btn-primary text-center">Volver</button>
         </div>
     </div>
+    <div ng-show="modo == 'Editar'">
+        <div class="form-group">
+            <label for="espacioEditar">Espacio:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="espacioEditar" value="{{idEspacio}}">
+            <label for="usuarioEditar">Usuario:</label>
+            <input ng-readonly="true" type="text" class="form-control" id="usuarioEditar" value="{{idUsuario}}">
+            <label for="tituloEditar">Titulo:</label>
+            <input type="text" class="form-control" id="tituloEditar" ng-model="titulo">
+            <label for="descripcionEditar">Descripcion:</label>
+            <input type="text" class="form-control" id="descripcionEditar" ng-model="descripcion">
+        </div>
+        <div>
+            <button ng-click="actualizar()" class="btn btn-primary text-center">Actualizar</button>
+            <button ng-click="volver()" class="btn btn-primary text-center">Volver</button>
+        </div>
+    </div>
 </div>

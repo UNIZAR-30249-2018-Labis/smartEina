@@ -182,7 +182,7 @@ public class IncidenceServiceTest {
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
             ids.add(id);
         }
-        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findIncidenciasBySala(l.getIdEspacio());
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByEspacio(l.getIdEspacio());
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
         assertTrue(listaIncidencias.size() ==  5);
         for(String elId : ids) incidenciaRepository.deleteIncidenciaByID(elId);
@@ -202,7 +202,7 @@ public class IncidenceServiceTest {
             System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
             ids.add(id);
         }
-        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findIncidenciasAceptadas();
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasAceptadas();
         for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
         assertTrue(listaIncidencias.size() ==  5);
         for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
