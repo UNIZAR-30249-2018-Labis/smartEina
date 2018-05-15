@@ -1,14 +1,15 @@
 package src;
 
-import static junit.framework.TestCase.assertTrue;
-
-import java.util.ArrayList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import src.domain.*;
+
+import java.util.ArrayList;
+
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
@@ -79,20 +80,37 @@ public class IncidenceServiceTest {
 
      @Test
     public void sacarIncidenciasdeTrabajador_existe() {
-        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
+        Localizacion loc = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
         Incidencia incidencia;
         ArrayList<String> ids = new ArrayList<>();
         for( int i = 0; i < 5 ; i++){
-            incidencia = new Incidencia(String.valueOf(i) ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","99",l);
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","999",loc);
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
-            Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","99",l);
+            Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","999",loc);
             System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
             ids.add(id);
         }
-        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("99");
-        for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
-        assertTrue(listaIncidencias.size() >=  5);
-        for(String elId : ids) incidenciaRepository.deleteIncidenciaByID(elId);
+
+
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("999");
+
+
+
+         System.out.println(listaIncidencias.size());
+
+         for(int i = 0; i<ids.size(); i++) {
+
+             Boolean existeInicidencia = false;
+             for ( Incidencia inci : listaIncidencias) {
+                 if (inci.getId().equals(ids.get(i))) {
+                     existeInicidencia = true;
+                 }
+             }
+             //assertTrue(existeInicidencia);
+             System.out.println("Existe incidencia: "+existeInicidencia);
+         }
+
+         for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
     }
 
     @Test
@@ -205,7 +223,7 @@ public class IncidenceServiceTest {
         }
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasAceptadas();
         System.out.println(listaIncidencias.size());
-        //for(int i = 0; i < 5 ; i++) System.out.println(listaIncidencias.get(i).getTitulo());
+
         for(int i = 0; i<ids.size(); i++) {
 
             Boolean existeInicidencia = false;
@@ -236,6 +254,30 @@ public class IncidenceServiceTest {
         assertTrue(incidenciaRepository.findAllIncidencias().size()==numeroIncidencias+1);
 
         incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    }
+
+    @Test
+    public void aceptarIncidencia() {
+        Localizacion loc = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
+        String username = "prueba";
+        Incidencia incidencia;
+
+        incidencia = new Incidencia(String.valueOf(33) ,"Test_Aceptada","TEST_Aceptada","PENDIENTE",username,"99",loc);
+        String id = incidenciaRepository.addIncidenciaTest(incidencia);
+        incidencia = new Incidencia(id ,"Test_Aceptada","TEST_Aceptada","ACEPTADA",username,"99",loc);
+        System.out.println("Aceptada: "+incidenciaRepository.pendienteToAceptada(incidencia));
+
+        ArrayList<Incidencia> incidenciasAceptadas = incidenciaRepository.findAllIncidenciasAceptadas();
+        Boolean incidenciaEstaAceptada = false;
+
+        for (Incidencia inci : incidenciasAceptadas) {
+            if (inci.getId().equals(id)) incidenciaEstaAceptada = true;
+        }
+        assertTrue(incidenciaEstaAceptada);
+
+        incidenciaRepository.deleteIncidenciaByID(id);
+
+
     }
 
 
