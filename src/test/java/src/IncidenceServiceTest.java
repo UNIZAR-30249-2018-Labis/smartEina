@@ -108,7 +108,7 @@ public class IncidenceServiceTest {
              System.out.println("Existe incidencia: "+existeInicidencia);
          }
 
-         for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
+         for(String idIncidencia : ids) incidenciaRepository.deleteIncidenciaByID(idIncidencia);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class IncidenceServiceTest {
             assertTrue(existeInicidencia);
         }
 
-        for(Incidencia laIncidencia : listaIncidencias) incidenciaRepository.deleteIncidenciaByID(laIncidencia.getId());
+        for(String idIncidencia : ids) incidenciaRepository.deleteIncidenciaByID(idIncidencia);
 
     }
 
