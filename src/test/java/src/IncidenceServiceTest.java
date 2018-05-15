@@ -9,6 +9,7 @@ import src.domain.*;
 
 import java.util.ArrayList;
 
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -278,6 +279,40 @@ public class IncidenceServiceTest {
         incidenciaRepository.deleteIncidenciaByID(id);
 
 
+    }
+
+    @Test
+    public void rechazarIncidencia() {
+        Localizacion loc = new Localizacion("CRE.1065.00.020","10",15,1,"S00");
+        String username = "prueba";
+        Incidencia incidencia;
+
+        incidencia = new Incidencia(String.valueOf(55) ,"Test_Rechazada","TEST_Rechazada","PENDIENTE",username,"99",loc);
+        String id = incidenciaRepository.addIncidenciaTest(incidencia);
+
+        ArrayList<Incidencia> incidenciasCreadas = incidenciaRepository.findAllIncidenciasCreadas();
+
+        Boolean incidenciaEstaCreada = false;
+
+        for (Incidencia inci : incidenciasCreadas) {
+            if (inci.getId().equals(id)) incidenciaEstaCreada = true;
+        }
+        assertTrue(incidenciaEstaCreada);
+
+        incidencia = new Incidencia(id ,"Test_Rechazada","TEST_Rechazada","RECHAZADA",username,"99",loc);
+        System.out.println("Rechazada: "+incidenciaRepository.pendienteToRechazada(incidencia));
+
+        //La hemos rechazado, ya no debe de aparecer
+        incidenciasCreadas = incidenciaRepository.findAllIncidenciasCreadas();
+
+        incidenciaEstaCreada = false;
+
+        for (Incidencia inci : incidenciasCreadas) {
+            if (inci.getId().equals(id)) incidenciaEstaCreada = true;
+        }
+        assertFalse(incidenciaEstaCreada);
+
+        incidenciaRepository.deleteIncidenciaByID(id);
     }
 
 
