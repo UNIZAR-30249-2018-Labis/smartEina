@@ -35,6 +35,20 @@ public class IncidenceService {
     @Autowired
     protected MantenimientoRepository mantenimientoRepository;
 
+    @RequestMapping(value = "/obtenerIncidenciaByID", method = RequestMethod.GET)
+    public ResponseEntity<String> getIncidencia(HttpServletRequest request) {
+        String idIncidencia = request.getHeader("idIncidencia");
+
+        Incidencia a = incidenciaRepository.findIncidenciaByID(idIncidencia);
+        System.out.println(a.toString());
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+        String json = gson.toJson(a);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/obtenerIncidenciasDeUsuario", method = RequestMethod.GET)
     public ResponseEntity<String> getIncidenciasUsuario(HttpServletRequest request) {
         String idUser = request.getHeader("idUser");

@@ -1,0 +1,114 @@
+<div class="modal-dialog">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-10">
+                <h2 class="modal-title"> Mi plan de trabajo: </h2>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" ng-click="volver()">Volver</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" style="width: 100%; height: 100%">
+        <table ng-if="asignadasLunes.length > 0" class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-1">Id</th>
+                <th class="col-md-1">Dia</th>
+                <th class="col-md-1">Hora</th>
+                <th class="col-md-1">Lugar</th>
+                <th class="col-md-1">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in asignadasLunes">
+                <th scope="row">{{incidencia.idIncidencia}}</th>
+                <th scope="row">{{incidencia.dia}}</th>
+                <th scope="row">{{incidencia.hora}}</th>
+                <th scope="row">{{incidencia.idEspacio}}</th>
+                <td><button ng-click="verIncidencia(incidencia.idIncidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <table ng-if="asignadasMartes.length > 0" class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-1">Id</th>
+                <th class="col-md-1">Dia</th>
+                <th class="col-md-1">Hora</th>
+                <th class="col-md-1">Lugar</th>
+                <th class="col-md-1">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in asignadasMartes">
+                <th scope="row">{{incidencia.idIncidencia}}</th>
+                <th scope="row">{{incidencia.dia}}</th>
+                <th scope="row">{{incidencia.hora}}</th>
+                <th scope="row">{{incidencia.idEspacio}}</th>
+                <td><button ng-click="verIncidencia(incidencia.idIncidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <table ng-if="asignadasMiercoles.length > 0" class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-1">Id</th>
+                <th class="col-md-1">Dia</th>
+                <th class="col-md-1">Hora</th>
+                <th class="col-md-1">Lugar</th>
+                <th class="col-md-1">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in asignadasMiercoles">
+                <th scope="row">{{incidencia.idIncidencia}}</th>
+                <th scope="row">{{incidencia.dia}}</th>
+                <th scope="row">{{incidencia.hora}}</th>
+                <th scope="row">{{incidencia.idEspacio}}</th>
+                <td><button ng-click="verIncidencia(incidencia.idIncidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <table ng-if="asignadasJueves.length > 0" class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-1">Id</th>
+                <th class="col-md-1">Dia</th>
+                <th class="col-md-1">Hora</th>
+                <th class="col-md-1">Lugar</th>
+                <th class="col-md-1">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in asignadasJueves">
+                <th scope="row">{{incidencia.idIncidencia}}</th>
+                <th scope="row">{{incidencia.dia}}</th>
+                <th scope="row">{{incidencia.hora}}</th>
+                <th scope="row">{{incidencia.idEspacio}}</th>
+                <td><button ng-click="verIncidencia(incidencia.idIncidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <table ng-if="asignadasViernes.length > 0" class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-1">Id</th>
+                <th class="col-md-1">Dia</th>
+                <th class="col-md-1">Hora</th>
+                <th class="col-md-1">Lugar</th>
+                <th class="col-md-1">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in asignadasViernes">
+                <th scope="row">{{incidencia.idIncidencia}}</th>
+                <th scope="row">{{incidencia.dia}}</th>
+                <th scope="row">{{incidencia.hora}}</th>
+                <th scope="row">{{incidencia.idEspacio}}</th>
+                <td><button ng-click="verIncidencia(incidencia.idIncidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

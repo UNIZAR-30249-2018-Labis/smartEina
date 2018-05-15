@@ -53,7 +53,7 @@ public class MantenimientoRepositoryImplementation implements MantenimientoRepos
     @Override
     public ArrayList<CeldaMantenimiento> findAllCeldasMantenimientoByTrabajador(String idTrabajador) {
         ArrayList<CeldaMantenimiento> celdas = new ArrayList<>();
-        String SQL = "SELECT * FROM public.tb_incidenciastrabajador WHERE idTrabajdor = ?";
+        String SQL = "SELECT * FROM public.tb_incidenciastrabajador WHERE idTrabajador = ?";
         try {
             List<CeldaMantenimiento> listaCeldas = jdbc.query(SQL, new Object[] {idTrabajador}, celdaMantenimientoMapper);
 

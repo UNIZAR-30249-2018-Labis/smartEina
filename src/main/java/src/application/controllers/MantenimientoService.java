@@ -38,7 +38,7 @@ public class MantenimientoService {
         } else return new ResponseEntity<String>("\"Error obteniendo incidencia mantenimiento.\"", HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getAllIncidenciaMantenimientoTrabajador", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllIncidenciasMantenimientoTrabajador", method = RequestMethod.GET)
     public ResponseEntity<String> getAllIncidenciasMantenimientoTrabajador(HttpServletRequest request) {
         String idTrabajador = request.getHeader("idTrabajador");
 
@@ -54,7 +54,7 @@ public class MantenimientoService {
         } else return new ResponseEntity<String>("\"Error obteniendo todas las incidencia mantenimiento por trabajador.\"", HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getAllIncidenciaMantenimientoEspacio", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllIncidenciasMantenimientoEspacio", method = RequestMethod.GET)
     public ResponseEntity<String> getAllIncidenciasMantenimientoEspacio(HttpServletRequest request) {
         String idEspacio = request.getHeader("idEspacio");
 

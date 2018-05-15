@@ -659,6 +659,32 @@ angular.module('smartEina')
             }
         };
 
+        $scope.verPlanDeTrabajo = function() {
+            console.log("Ver plan de trabajo")
+            var modalPlanDeTrabajo = $uibModal.open({
+                templateUrl: 'templates/planTrabajo.html',
+                animation: true,
+                windowClass: 'modal',
+                keyboard: false,
+                controller: 'modalPlanDeTrabajoCtrl',
+                resolve: {
+                    idTrabajador: function () {
+                        return $scope.userName
+                    },
+                    map: function () {
+                        return map
+                    },
+                    uibModal: function() {
+                        return $uibModal
+                    }
+                }
+            });
+
+            modalPlanDeTrabajo.result.then(function () {
+
+            })
+        };
+
         $scope.verHorario = function () {
             var modalHorario = $uibModal.open({
                 templateUrl: 'templates/horario.html',
@@ -1229,4 +1255,95 @@ angular.module('smartEina')
             $uibModalInstance.close();
         };
 
+    })
+
+    .controller('modalPlanDeTrabajoCtrl', function ($scope, $uibModalInstance, idTrabajador, map, uibModal) {
+        $scope.idTrabajador = idTrabajador;
+        $scope.map = map;
+        $scope.uibModal = uibModal;
+
+        $scope.asignadasLunes = [];
+        $scope.asignadasMartes = [];
+        $scope.asignadasMiercoles = [];
+        $scope.asignadasJueves = [];
+        $scope.asignadasViernes = [];
+
+        var callBack = function(data) {
+            $scope.asignadasLunes = [];
+            $scope.asignadasMartes = [];
+            $scope.asignadasMiercoles = [];
+            $scope.asignadasJueves = [];
+            $scope.asignadasViernes = [];
+            for (var i = 0; i< data.length; i++) {
+                switch(data[i].dia) {
+                    case "Lunes":
+                        $scope.asignadasLunes.push(data[i]);
+                        break;
+                    case "Martes":
+                        $scope.asignadasMartes.push(data[i]);
+                        break;
+                    case "Miercoles":
+                        $scope.asignadasMiercoles.push(data[i]);
+                        break;
+                    case "Jueves":
+                        $scope.asignadasJueves.push(data[i]);
+                        break;
+                    case "Viernes":
+                        $scope.asignadasViernes.push(data[i]);
+                        break;
+                }
+            }
+        };
+
+
+
+        $scope.verIncidencia = function(idIncidencia) {
+            console.log(idIncidencia)
+            $scope.map.obtenerIncidencia(idIncidencia, verIncidenciaCallBack);
+        };
+
+        var obtenerIncidenciasAsignadaTrabajador = function() {
+            $scope.map.obtenerAsignadasDeTrabajador(idTrabajador, callBack);
+        };
+
+        obtenerIncidenciasAsignadaTrabajador();
+
+        var verIncidenciaCallBack = function(incidencia) {
+            console.log("....................")
+            console.log(incidencia)
+            var modalVerIncidencia = $scope.uibModal.open({
+                templateUrl: 'templates/editarIncidencia.html',
+                animation: true,
+                windowClass: 'modal',
+                controller: 'modalEditarIncidenciaCtrl',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            modo: 'Ver',
+                            idUsuario: incidencia.idUsuario,
+                            idEspacio: incidencia.localizacion.idEspacio,
+                            map: map,
+                            planta: incidencia.localizacion.planta,
+                            latitude:incidencia.localizacion.y,
+                            longitude: incidencia.localizacion.x,
+                            titulo: incidencia.titulo,
+                            descripcion: incidencia.desc,
+                            idIncidencia: incidencia.id
+                        }
+                    }
+                },
+            });
+
+            modalVerIncidencia.result.then(function () {
+                obtenerIncidenciasAsignadaTrabajador();
+            })
+        };
+
+        $scope.volver = function() {
+            close();
+        };
+        var close = function () {
+            $uibModalInstance.close();
+        };
     });

@@ -231,6 +231,21 @@ angular.module('smartEina')
                 });
             },
 
+            obtenerIncidencia: function(idIncidencia, callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciaByID',
+                    headers: {
+                        "idIncidencia": idIncidencia
+                    }
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
+
             obtenerIncidenciasActivas: function(callBack) {
                 $http({
                     method: 'GET',
@@ -334,11 +349,24 @@ angular.module('smartEina')
                     callBack([]);
                 });
             },
+            obtenerAsignadasDeTrabajador: function(idTrabajador, callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/getAllIncidenciasMantenimientoTrabajador',
+                    headers: {
+                        'idTrabajador': idTrabajador
+                    }
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidenciasmantenimiento))
+                }).error(function() {
+                    callBack([]);
+                });
+            },
 
             obtenerAsignadasDeEspacio: function(idEspacio, callBack) {
                 $http({
                     method: 'GET',
-                    url: '/getAllIncidenciaMantenimientoEspacio',
+                    url: '/getAllIncidenciasMantenimientoEspacio',
                     headers: {
                         'idEspacio': idEspacio
                     }
