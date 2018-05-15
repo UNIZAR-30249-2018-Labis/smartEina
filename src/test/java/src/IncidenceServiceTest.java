@@ -28,6 +28,9 @@ public class IncidenceServiceTest {
     protected IncidenciaRepository incidenciaRepository;
 
     @Autowired
+    protected MantenimientoRepository mantenimientoRepository;
+
+    @Autowired
     protected EspacioRepository espacioRepository;
 
     @Autowired
@@ -95,14 +98,14 @@ public class IncidenceServiceTest {
         Incidencia incidencia;
         ArrayList<String> ids = new ArrayList<>();
         for( int i = 0; i < 5 ; i++){
-            incidencia = new Incidencia(String.valueOf(i) ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","999",loc);
+            incidencia = new Incidencia(String.valueOf(i) ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","worker1",loc);
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
-            Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","999",loc);
+            Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","worker1",loc);
             System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
             ids.add(id);
         }
 
-        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("999");
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("worker1");
 
          System.out.println(listaIncidencias.size());
 
@@ -461,13 +464,134 @@ public class IncidenceServiceTest {
     @Test
     public void testCrearIncidencia() throws JSONException {
         ResponseEntity<String> response = incidenceService.crearIncidencia("titulo", "descripcion",
-                "iduser", 33.3f, 33.3f, "plantaPrimera", "nombreEspacio");
+                "idUsuarioTestCrearIncidencia", 33.3f, 33.3f, "plantaPrimera", "nombreEspacio");
 
         String expected = "\"Se ha añadido la incidencia\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
         System.out.println(response.getBody());
+
+        ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasCreadas();
+
+        Boolean incidenciaEncontrada = false;
+        int i = 0;
+
+        System.out.println(listaIncidencias.size());
+
+        while (!incidenciaEncontrada && i<listaIncidencias.size()) {
+            if(listaIncidencias.get(i).getTitulo().equals("titulo") && listaIncidencias.get(i).getDesc().equals("descripcion")
+                    && listaIncidencias.get(i).getEstado().equals("PENDIENTE")) {
+                incidenciaEncontrada = true;
+            } else {
+                i++;
+            }
+        }
+
+        incidenciaRepository.deleteIncidenciaByID(listaIncidencias.get(i).getId());
+
     }
 
+    @Test
+    public void testUpdateIncidencia() throws JSONException {
+
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "PruebaUpdateIncidenciaController", "desc", "PENDIENTE","prueba","worker1",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
+
+        ResponseEntity<String> response = incidenceService.updateIncidencia("TituloNuevo", "DescripcionNueva",
+                idIncidencia);
+
+        String expected = "\"Se ha modificado la incidencia correctamente\"";
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+        System.out.println(response.getBody());
+
+        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    }
+
+    @Test
+    public void testAsignarIncidencia() throws JSONException {
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "PruebaAsignarIncidencia", "desc", "PENDIENTE","prueba","worker1",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
+
+        Incidencia incidencia2 = new Incidencia(idIncidencia ,"PruebaAsignarIncidencia","desc","ACEPTADA","prueba","worker1",l);
+        System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
 
 
+        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
+
+        String expected = "\"El estado de la incidencia ha sido actualizado y se ha creado la celda\"";
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+        System.out.println(response.getBody());
+
+        CeldaMantenimiento celda = mantenimientoRepository.findCeldaMantenimientoByIDs("worker1", idIncidencia);
+        mantenimientoRepository.deleteCeldaMantenimiento(celda);
+        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    }
+
+    @Test
+    public void testDesAsignarIncidencia() throws JSONException {
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "PruebaAsignarIncidencia", "desc", "PENDIENTE","prueba","worker1",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
+
+        Incidencia incidencia2 = new Incidencia(idIncidencia ,"PruebaAsignarIncidencia","desc","ACEPTADA","prueba","worker1",l);
+        System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
+
+
+        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
+
+        response = incidenceService.desAsignarIncidencia(idIncidencia,"worker1");
+
+        String expected = "\"El estado de la incidencia ha sido actualizado y la celda borrada\"";
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+        System.out.println(response.getBody());
+
+        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    }
+
+    /*
+    ES NECESARIO EL SERVIDOR SMTP DE ENVÍO DE EMAILS PARA EJECUTAR EL TEST CORRECTAMENTE
+
+    @Test
+    public void testTerminarIncidencia() throws JSONException {
+
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "PruebaTerminarIncidencia", "FalloEmail", "PENDIENTE","prueba","worker1",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
+
+        Incidencia incidencia2 = new Incidencia(idIncidencia ,"PruebaTerminarIncidencia","FalloEmail","ACEPTADA","prueba","worker1",l);
+        System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
+
+
+        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
+
+        response = incidenceService.terminarIncidencia(idIncidencia);
+
+        String expected = "\"El estado de la incidencia ha sido actualizado\"";
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+        System.out.println(response.getBody());
+
+        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+
+    }
+    */
+
+    // TODO Test aceptarIncidencia(), es necesario el servidor SMTP de envío de correo
+    // TODO Test rechazarIncidencia(), es necesario el servidor SMTP de envío de correo
+    // TODO Test incompletarIncidencia(), es necesario el servidor SMTP de envío de correo
+
+    @Test
+    public void testPendientarIncidencia() throws JSONException {
+        Localizacion l = new Localizacion("CRE.1065.00.020","10",15,1,"00");
+        Incidencia i = new Incidencia("01", "PruebaPendientarIncidencia", "desc", "INCOMPLETA","prueba","worker1",l);
+        String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
+
+        ResponseEntity<String> response = incidenceService.pendientarIncidencia(idIncidencia);
+
+        String expected = "\"El estado de la incidencia ha sido actualizado\"";
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+        System.out.println(response.getBody());
+
+        incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+    }
 }
