@@ -13,10 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import src.domain.Espacio;
-import src.domain.Incidencia;
-import src.domain.IncidenciaRepository;
-import src.domain.Localizacion;
+import src.domain.*;
 
 @Repository
 public class IncidenciaRepositoryImplementation implements IncidenciaRepository {
@@ -104,9 +101,9 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     //Hay que hacer un try-catch  porque puede que una incidencia NO esté asociada
     //a ningún trabajador
     try {
-      SQL = "SELECT * FROM public.tb_incidenciastrabajador WHERE idIncidencia = ?";
+      SQL = "SELECT * FROM public.tb_incidenciastrabajador WHERE idincidencia = ?";
       row = jdbc.queryForMap(SQL, Integer.parseInt(idIncidencia));
-      idTrabajador = (String) row.get("idTrabajador");
+      idTrabajador = (String) row.get("idtrabajador");
     }
     catch (EmptyResultDataAccessException e) {
       idTrabajador = "";
@@ -142,16 +139,16 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
 
   @Override
   public ArrayList<Incidencia> findAllIncidenciasByUser(String idUsuario) {
+    System.out.println("USUARIO INCIDENCIA: " + idUsuario);
     ArrayList<Incidencia> incidencias = new ArrayList<>();
     ArrayList<String> ids = new ArrayList<>();
     try{
-      String SQL = "SELECT * FROM public.tb_incidenciasuser WHERE idUser = ?";
+      String SQL = "SELECT * FROM public.tb_incidenciasuser WHERE iduser = ?";
       List<Map<String, Object>> rows = jdbc.queryForList(SQL, new Object[] {idUsuario});
 
       for (Map<String, Object> row: rows) {
         ids.add(String.valueOf(row.get("idIncidencia")));
       }
-
       for (String s : ids) {
         Incidencia incidencia = findIncidenciaByID(s);
         incidencias.add(incidencia);
@@ -164,7 +161,7 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
   }
 
   @Override
-  public ArrayList<Incidencia> findAllIncidenciasAceptadas() {
+  public ArrayList<Incidencia> findAllIncidenciasActivas() {
     ArrayList<Incidencia> incidenciaPreTrabajador = new ArrayList<>();
     ArrayList<Incidencia> incidencias = new ArrayList<>();
     try {
@@ -195,6 +192,31 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
       } else {
         incidencias.add(new Incidencia(i.getId(), i.getTitulo(), i.getDesc(), i.getEstado(), i.getIdUsuario(), "", i.getLocalizacion()));
       }
+    }
+    return incidencias;
+  }
+
+  @Override
+  public ArrayList<Incidencia> findAllIncidenciasAceptadas() {
+    ArrayList<Incidencia> incidenciaPreTrabajador = new ArrayList<>();
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    try {
+      String SQL = "SELECT * FROM public.tb_incidencias WHERE estado = 'ACEPTADA'";
+      List<Incidencia> list = jdbc.query(SQL, new Object[] {}, incidenciaMapper);
+
+      SQL = "SELECT * FROM public.tb_incidenciasuser WHERE idIncidencia = ?";
+
+      for (Incidencia i: list) {
+        Map<String, Object> row = jdbc.queryForMap(SQL, Integer.parseInt(i.getId()));
+        Localizacion localizacion = findLocalizacionByIDIncidencia(i.getId());
+        incidenciaPreTrabajador.add(new Incidencia(i.getId(),i.getTitulo(), i.getDesc(), i.getEstado(),(String) row.get("idUser"),null,localizacion));
+      }
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+    // Buscamos trabajadores
+    for (Incidencia i: incidenciaPreTrabajador) {
+      incidencias.add(new Incidencia(i.getId(), i.getTitulo(), i.getDesc(), i.getEstado(), i.getIdUsuario(), "", i.getLocalizacion()));
     }
     return incidencias;
   }
@@ -251,9 +273,31 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     try {
       List<Map<String, Object>> list = jdbc.queryForList(SQL, idEspacio);
 
+      System.out.println("Lista ids " + list.toString());
+
       for(Map row: list) {
         Incidencia incidencia = findIncidenciaByID(((Integer) row.get("idIncidencia")).toString());
         if (incidencia.getEstado().equals("ACEPTADA") || incidencia.getEstado().equals("ASIGNADA")) {
+          incidencias.add(incidencia);
+        }
+      }
+
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+    return incidencias;
+  }
+
+  @Override
+  public ArrayList<Incidencia> findAllIncidenciasByEspacioAceptadas(String idEspacio) {
+    ArrayList<Incidencia> incidencias = new ArrayList<>();
+    String SQL = "SELECT * FROM public.tb_localizacion WHERE idEspacio = ?";
+    try {
+      List<Map<String, Object>> list = jdbc.queryForList(SQL, idEspacio);
+
+      for(Map row: list) {
+        Incidencia incidencia = findIncidenciaByID(((Integer) row.get("idIncidencia")).toString());
+        if (incidencia.getEstado().equals("ACEPTADA")) {
           incidencias.add(incidencia);
         }
       }
@@ -304,12 +348,6 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
     String SQL =  "UPDATE public.tb_incidencias SET estado = ? WHERE idIncidencia = ?";
     if (jdbc.update(SQL, incidencia.getEstado(),Integer.parseInt(incidencia.getId())) == 0) {
       return false;
-    }
-     SQL = "INSERT INTO public.tb_incidenciastrabajador(\n"
-            + "\tidTrabajador, idIncidencia)\n"
-            + "\tVALUES(?, ?)";
-    if (jdbc.update(SQL, incidencia.getIdTrabajador(), Integer.parseInt(incidencia.getId())) == 0) {
-      return false;
     } else return true;
   }
 
@@ -325,11 +363,6 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
   public boolean asignadaToAceptada(Incidencia incidencia, String idTrabajador) {
     String SQL =  "UPDATE public.tb_incidencias SET estado = ? WHERE idIncidencia = ?";
     if (jdbc.update(SQL, incidencia.getEstado(), Integer.parseInt(incidencia.getId())) == 0) {
-      return false;
-    }
-
-    SQL = "DELETE FROM public.tb_incidenciasTrabajador WHERE idIncidencia = ? AND idTrabajador = ?";
-    if (jdbc.update(SQL, Integer.parseInt(incidencia.getId()), idTrabajador) == 0) {
       return false;
     } else return true;
   }

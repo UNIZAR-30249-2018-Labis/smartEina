@@ -84,7 +84,7 @@ angular.module('smartEina')
                     if (loggedType == 'Administrador') {
                         $state.go('map');
                     } else if (loggedType == 'Mantenimiento') {
-                        // Vamos al mapa de mantenimiento
+                        $state.go('map');
                     } else {
                         $state.go('map');
                     }
@@ -133,6 +133,52 @@ angular.module('smartEina')
                 $http({
                     method: 'POST',
                     url: '/aceptarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
+            asignarIncidencia: function(idTrabajador, idIncidencia, dia, hora, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/asignarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia,
+                        "idTrabajador": idTrabajador,
+                        "dia": dia,
+                        "hora": hora
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
+            desAsignarIncidencia: function(idIncidencia, idTrabajador, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/desAsignarIncidencia',
+                    params: {
+                        "idIncidencia": idIncidencia,
+                        "idTrabajador": idTrabajador
+                    }
+                }).success(function() {
+                    callBack()
+                }).error(function() {
+                    callBack()
+                });
+            },
+
+            finalizarIncidencia: function(idIncidencia, callBack) {
+                $http({
+                    method: 'POST',
+                    url: '/finalizarIncidencia',
                     params: {
                         "idIncidencia": idIncidencia
                     }
@@ -197,11 +243,37 @@ angular.module('smartEina')
                 });
             },
 
+            obtenerIncidenciasActivasMantenimiento: function(callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasAceptadas',
+                    headers: {}
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
             obtenerIncidenciasCreadas: function(callBack) {
                 $http({
                     method: 'GET',
                     url: '/obtenerIncidenciasCreadas',
                     headers: {}
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([])
+                });
+            },
+
+            obtenerIncidenciasAsignadas: function(idTrabajador, callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasDeTrabajador',
+                    headers: {
+                        "idTrabajador": idTrabajador
+                    }
                 }).success(function(data, status, headers) {
                     callBack(JSON.parse(headers().incidencias))
                 }).error(function() {
@@ -236,7 +308,6 @@ angular.module('smartEina')
             },
 
             obtenerIncidenciasDeEspacio: function(idEspacio, callBack) {
-                console.log("Enviamos: ", idEspacio)
                 $http({
                     method: 'GET',
                     url: '/obtenerIncidenciasDeEspacio',
@@ -244,8 +315,35 @@ angular.module('smartEina')
                         'idEspacio': idEspacio
                     }
                 }).success(function(data, status, headers) {
-                    console.log(headers().incidencias)
                     callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([]);
+                });
+            },
+
+            obtenerIncidenciasDeEspacioAceptadas: function(idEspacio, callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerIncidenciasDeEspacioAceptadas',
+                    headers: {
+                        'idEspacio': idEspacio
+                    }
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidencias))
+                }).error(function() {
+                    callBack([]);
+                });
+            },
+
+            obtenerAsignadasDeEspacio: function(idEspacio, callBack) {
+                $http({
+                    method: 'GET',
+                    url: '/getAllIncidenciaMantenimientoEspacio',
+                    headers: {
+                        'idEspacio': idEspacio
+                    }
+                }).success(function(data, status, headers) {
+                    callBack(JSON.parse(headers().incidenciasmantenimiento))
                 }).error(function() {
                     callBack([]);
                 });
@@ -308,7 +406,6 @@ angular.module('smartEina')
             },
 
             obtenerCoordenadas: function (idEspacio, callBack) {
-                console.log("IDEAOISUDAWD " + idEspacio)
                 $http({
                     method: 'GET',
                     url: '/obtenerCoordsDeEspacio',
@@ -316,7 +413,6 @@ angular.module('smartEina')
                         'idEspacio': idEspacio
                     }
                 }).success(function(data, status, headers) {
-                    console.log("Coords: ", headers().coordenadas);
                     callBack(JSON.parse(headers().coordenadas))
                 }).error(function() {
                     callBack([]);
@@ -340,7 +436,6 @@ angular.module('smartEina')
             },
 
             crearIncidencia: function (titulo, descripcion, idUsuario, planta, x, y, idEspacio, callBack) {
-                console.log("CREAMOS");
                 $http({
                     method: 'POST',
                     url: '/crearIncidencia',

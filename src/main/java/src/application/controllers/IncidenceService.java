@@ -1,6 +1,7 @@
 package src.application.controllers;
 
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpsParameters;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,9 +15,8 @@ import src.application.domain.Email;
 import src.application.domain.EmailRepository;
 import src.application.domain.User;
 import src.application.domain.UserRepository;
-import src.domain.Incidencia;
-import src.domain.IncidenciaRepository;
-import src.domain.Localizacion;
+import src.domain.*;
+import src.infrastructure.repository.MantenimientoRepositoryImplementation;
 
 import java.util.ArrayList;
 
@@ -32,6 +32,9 @@ public class IncidenceService {
     @Autowired
     protected EmailRepository emailRepository;
 
+    @Autowired
+    protected MantenimientoRepository mantenimientoRepository;
+
     @RequestMapping(value = "/obtenerIncidenciasDeUsuario", method = RequestMethod.GET)
     public ResponseEntity<String> getIncidenciasUsuario(HttpServletRequest request) {
         String idUser = request.getHeader("idUser");
@@ -39,7 +42,18 @@ public class IncidenceService {
         ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasByUser(idUser);
         Gson gson = new Gson();
         HttpHeaders headers = new HttpHeaders();
+        String json = gson.toJson(a);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
 
+    @RequestMapping(value = "/obtenerIncidenciasDeTrabajador", method = RequestMethod.GET)
+    public ResponseEntity<String> getIncidenciasTrabajador(HttpServletRequest request) {
+        String idUser = request.getHeader("idTrabajador");
+
+        ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasByTrabajador(idUser);
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
         String json = gson.toJson(a);
         headers.add("Incidencias", json);
         return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
@@ -70,7 +84,31 @@ public class IncidenceService {
         return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/obtenerIncidenciasDeEspacioAceptadas", method = RequestMethod.GET)
+    public ResponseEntity<String> getIncidenciasEspacioAceptadas(HttpServletRequest request) {
+        String idEspacio = request.getHeader("idEspacio");
+
+        ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasByEspacioAceptadas(idEspacio);
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+
+        String json = gson.toJson(a);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/obtenerIncidenciasActivas", method = RequestMethod.GET)
+    public ResponseEntity<String> getIncidenciasActivasYAsignadas(HttpServletRequest request) {
+        ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasActivas();
+        Gson gson = new Gson();
+        HttpHeaders headers = new HttpHeaders();
+
+        String json = gson.toJson(a);
+        headers.add("Incidencias", json);
+        return new ResponseEntity<String>("\"Exito obteniendo incidencias\"", headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/obtenerIncidenciasAceptadas", method = RequestMethod.GET)
     public ResponseEntity<String> getIncidenciasActivas(HttpServletRequest request) {
         ArrayList<Incidencia> a = incidenciaRepository.findAllIncidenciasAceptadas();
         Gson gson = new Gson();
@@ -120,33 +158,49 @@ public class IncidenceService {
 
     @RequestMapping(value = "/asignarIncidencia", method = RequestMethod.POST)
     public ResponseEntity<String> asignarIncidencia(@RequestParam("idIncidencia") String idIncidencia,
-                                                    @RequestParam("idTrabajador") String idTrabajador) {
+                                                    @RequestParam("idTrabajador") String idTrabajador,
+                                                    @RequestParam("dia") String dia,
+                                                    @RequestParam("hora") String hora) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
 
        if (incidenciaRepository.aceptadaToAsignada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ASIGNADA", incidencia.getIdUsuario(), idTrabajador, incidencia.getLocalizacion()))) {
-           return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+           CeldaMantenimiento celda = new CeldaMantenimiento(incidencia.getLocalizacion().getIdEspacio(), idTrabajador, idIncidencia, dia, Integer.parseInt(hora));
+           if (mantenimientoRepository.addCeldaMantenimiento(celda)) {
+               return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado y se ha creado la celda\"", HttpStatus.OK);
+           } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
        } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/desAsignarIncidencia", method = RequestMethod.POST)
     public ResponseEntity<String> desAsignarIncidencia(@RequestParam("idIncidencia") String idIncidencia,
                                                         @RequestParam("idTrabajador") String idTrabajador) {
+
+        System.out.println(idIncidencia + " " + idTrabajador);
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
+        CeldaMantenimiento celda = mantenimientoRepository.findCeldaMantenimientoByIDs(idTrabajador, idIncidencia);
+
+        System.out.println("Incidencia: " + incidencia.toString());
+        System.out.println("CELDA " + celda.toString());
 
         if (incidenciaRepository.asignadaToAceptada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ACEPTADA", incidencia.getIdUsuario(), "", incidencia.getLocalizacion()), idTrabajador)) {
-            return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            if (mantenimientoRepository.deleteCeldaMantenimiento(celda)) {
+                return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado y la celda borrada\"", HttpStatus.OK);
+            } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/finalizarIncidencia", method = RequestMethod.POST)
     public ResponseEntity<String> terminarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
+        CeldaMantenimiento celda = mantenimientoRepository.findCeldaMantenimientoByIDs(incidencia.getIdTrabajador(), idIncidencia);
 
         if (incidenciaRepository.asignadaToFinalizada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "COMPLETADA", incidencia.getIdUsuario(), incidencia.getIdTrabajador(), incidencia.getLocalizacion()))) {
-            User user = userRepository.findByName(incidencia.getIdUsuario());
-            Email email = new Email("admin.smartEina@gmail.com", user.getEmail(), "Incidencia \"" + incidencia.getId() + "\" completada!", "Su incidencia ha sido completada.");
-            if (emailRepository.sendEmail(email)) {
-                return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+            if (mantenimientoRepository.deleteCeldaMantenimiento(celda)) {
+                User user = userRepository.findByName(incidencia.getIdUsuario());
+                Email email = new Email("admin.smartEina@gmail.com", user.getEmail(), "Incidencia \"" + incidencia.getId() + "\" completada!", "Su incidencia ha sido completada.");
+                if (emailRepository.sendEmail(email)) {
+                    return new ResponseEntity<String>("\"El estado de la incidencia ha sido actualizado\"", HttpStatus.OK);
+                } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
         } return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia\"", HttpStatus.BAD_REQUEST);
     }

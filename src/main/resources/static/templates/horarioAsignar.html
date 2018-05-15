@@ -1,0 +1,430 @@
+<div class="modal-dialog">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-10">
+                <h2 class="modal-title"> Horario de asignación</h2>
+                <h2 class="modal-title"> Nombre del trabajador: {{idTrabajador}}</h2>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" ng-click="close()">Volver</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" style="width: 100%; height: 100%">
+        <ul class="nav nav-tabs">
+            <li class="active noround">
+                <a data-toggle="pill" href="#lunes">Lunes</a>
+            </li>
+            <li class="noround">
+                <a data-toggle="pill" href="#martes">Martes</a>
+            </li>
+            <li class="noround">
+                <a data-toggle="pill" href="#miercoles">Miércoles</a>
+            </li>
+            <li class="noround">
+                <a data-toggle="pill" href="#jueves">Jueves</a>
+            </li>
+            <li class="noround">
+                <a data-toggle="pill" href="#viernes">Viernes</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="lunes" class="tab-pane fade in active">
+                <br>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr class="table-head">
+                        <th class="col-md-3">Hora</th>
+                        <th class="col-md-8">Incidencia</th>
+                        <th class="col-md-1">Acciones</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="l8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{actividadesLunes[0]}} </td>
+                        <td ng-if="actividadesLunes[0] == ''"><button ng-click="asignar('Lunes',8)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td>{{actividadesLunes[1]}}</td>
+                        <td ng-if="actividadesLunes[1] == ''"><button ng-click="asignar('Lunes',9)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{actividadesLunes[2]}} </td>
+                        <td ng-if="actividadesLunes[2] == ''"><button ng-click="asignar('Lunes',10)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{actividadesLunes[3]}} </td>
+                        <td ng-if="actividadesLunes[3] == ''"><button ng-click="asignar('Lunes',11)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{actividadesLunes[4]}} </td>
+                        <td ng-if="actividadesLunes[4] == ''"><button ng-click="asignar('Lunes',12)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{actividadesLunes[5]}} </td>
+                        <td ng-if="actividadesLunes[5] == ''"><button ng-click="asignar('Lunes',13)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{actividadesLunes[6]}} </td>
+                        <td ng-if="actividadesLunes[6] == ''"><button ng-click="asignar('Lunes',14)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{actividadesLunes[7]}} </td>
+                        <td ng-if="actividadesLunes[7] == ''"><button ng-click="asignar('Lunes',15)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{actividadesLunes[8]}} </td>
+                        <td ng-if="actividadesLunes[8] == ''"><button ng-click="asignar('Lunes',16)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{actividadesLunes[9]}} </td>
+                        <td ng-if="actividadesLunes[9] == ''"><button ng-click="asignar('Lunes',17)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{actividadesLunes[10]}} </td>
+                        <td ng-if="actividadesLunes[10] == ''"><button ng-click="asignar('Lunes',18)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{actividadesLunes[11]}} </td>
+                        <td ng-if="actividadesLunes[11] == ''"><button ng-click="asignar('Lunes',19)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="l20" >
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{actividadesLunes[12]}} </td>
+                        <td ng-if="actividadesLunes[12] == ''"><button ng-click="asignar('Lunes',20)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="martes" class="tab-pane fade">
+                <br>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr class="table-head">
+                        <th class="col-md-3">Hora</th>
+                        <th class="col-md-8">Incidencia</th>
+                        <th class="col-md-1">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="m8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{actividadesMartes[0]}} </td>
+                        <td ng-if="actividadesMartes[0] == ''"><button ng-click="asignar('Martes',8)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td> {{actividadesMartes[1]}} </td>
+                        <td ng-if="actividadesMartes[1] == ''"><button ng-click="asignar('Martes',9)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{actividadesMartes[2]}} </td>
+                        <td ng-if="actividadesMartes[2] == ''"><button ng-click="asignar('Martes',10)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{actividadesMartes[3]}} </td>
+                        <td ng-if="actividadesMartes[3] == ''"><button ng-click="asignar('Martes',11)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{actividadesMartes[4]}} </td>
+                        <td ng-if="actividadesMartes[4] == ''"><button ng-click="asignar('Martes',12)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{actividadesMartes[5]}} </td>
+                        <td ng-if="actividadesMartes[5] == ''"><button ng-click="asignar('Martes',13)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{actividadesMartes[6]}} </td>
+                        <td ng-if="actividadesMartes[6] == ''"><button ng-click="asignar('Martes',14)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{actividadesMartes[7]}} </td>
+                        <td ng-if="actividadesMartes[7] == ''"><button ng-click="asignar('Martes',15)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{actividadesMartes[8]}} </td>
+                        <td ng-if="actividadesMartes[8] == ''"><button ng-click="asignar('Martes',16)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{actividadesMartes[9]}} </td>
+                        <td ng-if="actividadesMartes[9] == ''"><button ng-click="asignar('Martes',17)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{actividadesMartes[10]}} </td>
+                        <td ng-if="actividadesMartes[10] == ''"><button ng-click="asignar('Martes',18)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{actividadesMartes[11]}} </td>
+                        <td ng-if="actividadesMartes[11] == ''"><button ng-click="asignar('Martes',19)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="m20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{actividadesMartes[12]}} </td>
+                        <td ng-if="actividadesMartes[12] == ''"><button ng-click="asignar('Martes',20)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="miercoles" class="tab-pane fade">
+                <br>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr class="table-head">
+                        <th class="col-md-3">Hora</th>
+                        <th class="col-md-8">Incidencia</th>
+                        <th class="col-md-1">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="x8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{actividadesMiercoles[0]}} </td>
+                        <td ng-if="actividadesMiercoles[0] == ''"><button ng-click="asignar('Miercoles',8)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td> {{actividadesMiercoles[1]}} </td>
+                        <td ng-if="actividadesMiercoles[1] == ''"><button ng-click="asignar('Miercoles',9)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{actividadesMiercoles[2]}} </td>
+                        <td ng-if="actividadesMiercoles[2] == ''"><button ng-click="asignar('Miercoles',10)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{actividadesMiercoles[3]}} </td>
+                        <td ng-if="actividadesMiercoles[3] == ''"><button ng-click="asignar('Miercoles',11)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{actividadesMiercoles[4]}} </td>
+                        <td ng-if="actividadesMiercoles[4] == ''"><button ng-click="asignar('Miercoles',12)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{actividadesMiercoles[5]}} </td>
+                        <td ng-if="actividadesMiercoles[5] == ''"><button ng-click="asignar('Miercoles',13)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{actividadesMiercoles[6]}} </td>
+                        <td ng-if="actividadesMiercoles[6] == ''"><button ng-click="asignar('Miercoles',14)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{actividadesMiercoles[7]}} </td>
+                        <td ng-if="actividadesMiercoles[7] == ''"><button ng-click="asignar('Miercoles',15)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{actividadesMiercoles[8]}} </td>
+                        <td ng-if="actividadesMiercoles[8] == ''"><button ng-click="asignar('Miercoles',16)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{actividadesMiercoles[9]}} </td>
+                        <td ng-if="actividadesMiercoles[9] == ''"><button ng-click="asignar('Miercoles',17)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{actividadesMiercoles[10]}} </td>
+                        <td ng-if="actividadesMiercoles[10] == ''"><button ng-click="asignar('Miercoles',18)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{actividadesMiercoles[11]}} </td>
+                        <td ng-if="actividadesMiercoles[11] == ''"><button ng-click="asignar('Miercoles',19)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="x20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{actividadesMiercoles[12]}} </td>
+                        <td ng-if="actividadesMiercoles[12] == ''"><button ng-click="asignar('Miercoles',20)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="jueves" class="tab-pane fade">
+                <br>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr class="table-head">
+                        <th class="col-md-3">Hora</th>
+                        <th class="col-md-8">Incidencia</th>
+                        <th class="col-md-1">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="j8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{actividadesJueves[0]}} </td>
+                        <td ng-if="actividadesJueves[0] == ''"><button ng-click="asignar('Jueves',8)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td> {{actividadesJueves[1]}} </td>
+                        <td ng-if="actividadesJueves[1] == ''"><button ng-click="asignar('Jueves',9)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{actividadesJueves[2]}} </td>
+                        <td ng-if="actividadesJueves[2] == ''"><button ng-click="asignar('Jueves',10)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{actividadesJueves[3]}} </td>
+                        <td ng-if="actividadesJueves[3] == ''"><button ng-click="asignar('Jueves',11)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{actividadesJueves[4]}} </td>
+                        <td ng-if="actividadesJueves[4] == ''"><button ng-click="asignar('Jueves',12)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{actividadesJueves[5]}} </td>
+                        <td ng-if="actividadesJueves[5] == ''"><button ng-click="asignar('Jueves',13)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{actividadesJueves[6]}} </td>
+                        <td ng-if="actividadesJueves[6] == ''"><button ng-click="asignar('Jueves',14)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{actividadesJueves[7]}} </td>
+                        <td ng-if="actividadesJueves[7] == ''"><button ng-click="asignar('Jueves',15)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{actividadesJueves[8]}} </td>
+                        <td ng-if="actividadesJueves[8] == ''"><button ng-click="asignar('Jueves',16)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{actividadesJueves[9]}} </td>
+                        <td ng-if="actividadesJueves[9] == ''"><button ng-click="asignar('Jueves',17)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{actividadesJueves[10]}} </td>
+                        <td ng-if="actividadesJueves[10] == ''"><button ng-click="asignar('Jueves',18)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{actividadesJueves[11]}} </td>
+                        <td ng-if="actividadesJueves[11] == ''"><button ng-click="asignar('Jueves',19)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="j20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{actividadesJueves[12]}} </td>
+                        <td ng-if="actividadesJueves[12] == ''"><button ng-click="asignar('Jueves',20)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="viernes" class="tab-pane fade">
+                <br>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr class="table-head">
+                        <th class="col-md-3">Hora</th>
+                        <th class="col-md-8">Incidencia</th>
+                        <th class="col-md-1">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="v8">
+                        <th scope="row">8:00 - 9:00</th>
+                        <td> {{actividadesViernes[0]}} </td>
+                        <td ng-if="actividadesViernes[0] == ''"><button ng-click="asignar('Viernes',8)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v9">
+                        <th scope="row">9:00 - 10:00</th>
+                        <td> {{actividadesViernes[1]}} </td>
+                        <td ng-if="actividadesViernes[1] == ''"><button ng-click="asignar('Viernes',9)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v10">
+                        <th scope="row">10:00 - 11:00</th>
+                        <td> {{actividadesViernes[2]}} </td>
+                        <td ng-if="actividadesViernes[2] == ''"><button ng-click="asignar('Viernes',10)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v11">
+                        <th scope="row">11:00 - 12:00</th>
+                        <td> {{actividadesViernes[3]}} </td>
+                        <td ng-if="actividadesViernes[3] == ''"><button ng-click="asignar('Viernes',11)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v12">
+                        <th scope="row">12:00 - 13:00</th>
+                        <td> {{actividadesViernes[4]}} </td>
+                        <td ng-if="actividadesViernes[4] == ''"><button ng-click="asignar('Viernes',12)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v13">
+                        <th scope="row">13:00 - 14:00</th>
+                        <td> {{actividadesViernes[5]}} </td>
+                        <td ng-if="actividadesViernes[5] == ''"><button ng-click="asignar('Viernes',13)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v14">
+                        <th scope="row">14:00 - 15:00</th>
+                        <td> {{actividadesViernes[6]}} </td>
+                        <td ng-if="actividadesViernes[6] == ''"><button ng-click="asignar('Viernes',14)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v15">
+                        <th scope="row">15:00 - 16:00</th>
+                        <td> {{actividadesViernes[7]}} </td>
+                        <td ng-if="actividadesViernes[7] == ''"><button ng-click="asignar('Viernes',15)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v16">
+                        <th scope="row">16:00 - 17:00</th>
+                        <td> {{actividadesViernes[8]}} </td>
+                        <td ng-if="actividadesViernes[8] == ''"><button ng-click="asignar('Viernes',16)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v17">
+                        <th scope="row">17:00 - 18:00</th>
+                        <td> {{actividadesViernes[9]}} </td>
+                        <td ng-if="actividadesViernes[9] == ''"><button ng-click="asignar('Viernes',17)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v18">
+                        <th scope="row">18:00 - 19:00</th>
+                        <td> {{actividadesViernes[10]}} </td>
+                        <td ng-if="actividadesViernes[10] == ''"><button ng-click="asignar('Viernes',18)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v19">
+                        <th scope="row">19:00 - 20:00</th>
+                        <td> {{actividadesViernes[11]}} </td>
+                        <td ng-if="actividadesViernes[11] == ''"><button ng-click="asignar('Viernes',19)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    <tr id="v20">
+                        <th scope="row">20:00 - 21:00</th>
+                        <td> {{actividadesViernes[12]}} </td>
+                        <td ng-if="actividadesViernes[12] == ''"><button ng-click="asignar('Viernes',20)" class="btn btn-primary">Asignar</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

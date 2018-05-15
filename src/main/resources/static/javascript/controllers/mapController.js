@@ -15,6 +15,8 @@ angular.module('smartEina')
         $scope.misIncidenciasActive = false;
         $scope.incidenciasGeneralesActive = false;
         $scope.administrarIncidenciasActive = false;
+        $scope.mantenimientoGeneralesActive = false;
+        $scope.mantenimientoAsignadasActive = false;
 
         $scope.switchMisIncidenciasActive = function() {
           if ( $scope.misIncidenciasActive == false) {
@@ -34,7 +36,21 @@ angular.module('smartEina')
             } else  $scope.administrarIncidenciasActive = false;
         };
 
+        $scope.switchIncidenciasGeneralesMantenimientoActive = function() {
+            if ($scope.mantenimientoGeneralesActive == false) {
+                $scope.mantenimientoGeneralesActive = true;
+            } else $scope.mantenimientoGeneralesActive = false;
+        };
+
+        $scope.switchIncidenciasAsignadasMantenimientoActive = function() {
+            if ($scope.mantenimientoAsignadasActive == false) {
+                $scope.mantenimientoAsignadasActive = true;
+            } else $scope.mantenimientoAsignadasActive = false;
+        };
+
         $scope.incidenciasActivas = [];
+
+        $scope.incidenciasAsignadas = [];
 
         $scope.markersActivas = {};
 
@@ -153,18 +169,34 @@ angular.module('smartEina')
             }
         };
 
+        var getInfoError = function () {
+            $scope.data.idSelected = "No disponible";
+            $scope.data.nombreSelected = "No disponible";
+            $scope.data.edificioSelected = "No disponible";
+            $scope.data.plantaSelected = "No disponible";
+            $scope.data.usoSelected = "No disponible";
+            $scope.horario = null;
+        };
+
+        var getInfoSuccess = function (espacio) {
+            $scope.data.idSelected = espacio.id;
+            $scope.data.nombreSelected = espacio.nombre;
+            $scope.data.edificioSelected = espacio.edificio;
+            $scope.data.plantaSelected = espacio.planta;
+            $scope.data.usoSelected = espacio.tipoDeUso;
+            $scope.horario = espacio.horario;
+        };
+
         var llenarIncidenciasActivas = function(data) {
+            console.log(data)
             $scope.incidenciasActivas = [];
-            $scope.markersActivas = [];
             for (var i = 0; i< data.length; i++) {
                 $scope.incidenciasActivas.push(data[i]);
-                crearMarkerIncidenciasActivas(data[i]);
             }
         };
 
         var llenarIncidenciasActivasAdmin = function(data) {
             $scope.allIncidencias.aceptadas = [];
-
             for (var i=0; i< data.length; i++) {
                 $scope.allIncidencias.aceptadas.push(data[i]);
             }
@@ -177,6 +209,13 @@ angular.module('smartEina')
             }
         };
 
+        var llenarIncidenciasAsignadas = function (data) {
+            $scope.incidenciasAsignadas = [];
+            for (var i=0; i< data.length; i++) {
+                $scope.incidenciasAsignadas.push(data[i]);
+            }
+        };
+
         var obtenerIncidencias = function() {
             if ($scope.userType == 'Basico') {
                 map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
@@ -184,6 +223,9 @@ angular.module('smartEina')
             } else if ($scope.userType == 'Administrador') {
                 map.obtenerIncidenciasActivas(llenarIncidenciasActivasAdmin);
                 map.obtenerIncidenciasCreadas(llenarIncidenciasCreadasAdmin);
+            } else if ($scope.userType == 'Mantenimiento') {
+                map.obtenerIncidenciasActivasMantenimiento(llenarIncidenciasActivas);
+                map.obtenerIncidenciasAsignadas($scope.userName, llenarIncidenciasAsignadas);
             }
         };
 
@@ -215,9 +257,41 @@ angular.module('smartEina')
             });
 
             modalVerIncidencia.result.then(function () {
-                map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
-                map.obtenerIncidenciasActivas(llenarIncidenciasActivas);
+                obtenerIncidencias();
             })
+        };
+
+        $scope.finalizarIncidencia = function(incidencia) {
+          map.finalizarIncidencia(incidencia.id, obtenerIncidencias);
+        };
+
+        $scope.desasignarIncidencia = function(incidencia) {
+            map.desAsignarIncidencia(incidencia.id, $scope.userName, obtenerIncidencias)
+        };
+
+        $scope.asignarIncidencia = function(incidencia) {
+            var modalAsignarMantenimiento = $uibModal.open({
+                templateUrl: 'templates/horarioAsignar.html',
+                animation: true,
+                windowClass: 'modal',
+                keyboard: false,
+                controller: 'modalAsignarMantenimientoCtrl',
+                resolve: {
+                    incidencia: function () {
+                        return incidencia
+                    },
+                    idTrabajador: function () {
+                        return $scope.userName
+                    },
+                    map: function () {
+                        return map
+                    }
+                }
+            });
+
+            modalAsignarMantenimiento.result.then(function () {
+                obtenerIncidencias();
+            });
         };
 
         $scope.editarIncidenciaIncompleta = function(incidencia) {
@@ -246,8 +320,7 @@ angular.module('smartEina')
             });
 
             modalEditarIncidenciaIncompleta.result.then(function () {
-                map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
-                map.obtenerIncidenciasActivas(llenarIncidenciasActivas);
+                obtenerIncidencias();
             })
         };
 
@@ -277,8 +350,7 @@ angular.module('smartEina')
             });
 
             modalEditarIncidencia.result.then(function () {
-                map.obtenerIncidenciasDeUsuario($scope.userName, llenarIncidenciasUserBasico);
-                map.obtenerIncidenciasActivas(llenarIncidenciasActivas);
+                obtenerIncidencias();
             })
         };
 
@@ -290,6 +362,14 @@ angular.module('smartEina')
                     lng: incidencia.localizacion.x,
                     zoom: 22
                 }
+            });
+            var idWFS = map.obtenerId($scope.layers.overlays.active.layerParams.layers, incidencia.localizacion.y, incidencia.localizacion.x);
+
+            idWFS.then(function (result) {
+                var idCompleto = result;
+                map.getInfo(idCompleto, getInfoSuccess, getInfoError);
+
+                $scope.addMarker(incidencia.localizacion.y, incidencia.localizacion.x);
             });
         };
 
@@ -323,6 +403,9 @@ angular.module('smartEina')
                 keyboard: false,
                 controller: 'modalIncidenciasCtrl',
                 resolve: {
+                    userType: function() {
+                        return $scope.userType
+                    },
                     idSelected: function () {
                         return $scope.data.idSelected
                     },
@@ -343,11 +426,15 @@ angular.module('smartEina')
                     },
                     longitude: function() {
                         return longitude
+                    },
+                    uibModal: function() {
+                        return $uibModal
                     }
                 }
             });
 
             modalIncidencias.result.then(function () {
+                obtenerIncidencias();
             })
 
         };
@@ -421,23 +508,7 @@ angular.module('smartEina')
             });
         });
 
-        var getInfoError = function () {
-            $scope.data.idSelected = "No disponible";
-            $scope.data.nombreSelected = "No disponible";
-            $scope.data.edificioSelected = "No disponible";
-            $scope.data.plantaSelected = "No disponible";
-            $scope.data.usoSelected = "No disponible";
-            $scope.horario = null;
-        };
 
-        var getInfoSuccess = function (espacio) {
-            $scope.data.idSelected = espacio.id;
-            $scope.data.nombreSelected = espacio.nombre;
-            $scope.data.edificioSelected = espacio.edificio;
-            $scope.data.plantaSelected = espacio.planta;
-            $scope.data.usoSelected = espacio.tipoDeUso;
-            $scope.horario = espacio.horario;
-        };
 
         $scope.addMarker = function (latitude, longitude) {
             $scope.clearMarkers();
@@ -818,14 +889,16 @@ angular.module('smartEina')
         };
     })
 
-    .controller('modalIncidenciasCtrl', function ($scope, $uibModalInstance, idSelected, plantaActual, userName, map, uibModal, latitude, longitude) {
+    .controller('modalIncidenciasCtrl', function ($scope, $uibModalInstance, userType, idSelected, plantaActual, userName, map, uibModal, latitude, longitude) {
         $scope.idSelected = idSelected;
         $scope.plantaActual = plantaActual;
         $scope.userName = userName;
+        $scope.userType = userType;
         $scope.map = map;
         $scope.uibModal = uibModal;
         $scope.latitude = latitude;
         $scope.longitude = longitude;
+        $scope.uibModal = uibModal;
 
         $scope.incidenciasEspacio = [];
 
@@ -836,7 +909,32 @@ angular.module('smartEina')
             }
         };
 
-        $scope.map.obtenerIncidenciasDeEspacio($scope.idSelected, llenarIncidenciasEspacio);
+        $scope.asignarIncidencia = function(incidencia) {
+            var modalAsignarMantenimiento = $scope.uibModal.open({
+                templateUrl: 'templates/horarioAsignar.html',
+                animation: true,
+                windowClass: 'modal',
+                keyboard: false,
+                controller: 'modalAsignarMantenimientoCtrl',
+                resolve: {
+                    incidencia: function () {
+                        return incidencia
+                    },
+                    idTrabajador: function () {
+                        return $scope.userName
+                    },
+                    map: function () {
+                        return map
+                    }
+                }
+            });
+
+            modalAsignarMantenimiento.result.then(function () {
+                $scope.map.obtenerIncidenciasDeEspacioAceptadas($scope.idSelected, llenarIncidenciasEspacio);
+            });
+        };
+
+        $scope.map.obtenerIncidenciasDeEspacioAceptadas($scope.idSelected, llenarIncidenciasEspacio);
 
         $scope.crearIncidencia = function() {
             var modalCrearIncidencia = $scope.uibModal.open({
@@ -970,4 +1068,165 @@ angular.module('smartEina')
         var close = function () {
             $uibModalInstance.close();
         };
+    })
+
+    .controller('modalAsignarMantenimientoCtrl', function ($scope, $uibModalInstance, incidencia, idTrabajador, map) {
+        $scope.idTrabajador = idTrabajador;
+        $scope.map = map;
+        $scope.incidencia = incidencia;
+
+        $scope.horasLunes = [];
+        $scope.horasMartes = [];
+        $scope.horasMiercoles= [];
+        $scope.horasJueves = [];
+        $scope.horasViernes = [];
+
+        $scope.asignadasLunes = [];
+        $scope.asignadasMartes = [];
+        $scope.asignadasMiercoles= [];
+        $scope.asignadasJueves = [];
+        $scope.asignadasViernes = [];
+
+        $scope.actividadesLunes = [];
+        $scope.actividadesMartes = [];
+        $scope.actividadesMiercoles = [];
+        $scope.actividadesJueves = [];
+        $scope.actividadesViernes = [];
+
+        var loadData = function () {
+            for (var i = 0; i< 13; i++) {
+                $scope.actividadesLunes.push("");
+                $scope.actividadesMartes.push("");
+                $scope.actividadesMiercoles.push("");
+                $scope.actividadesJueves.push("");
+                $scope.actividadesViernes.push("");
+            }
+
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasLunes.length; j++) {
+                    if ($scope.horasLunes[j].horaDeInicio == i) {
+                        $scope.actividadesLunes[i-8] = ($scope.horasLunes[j].actividad);
+                        break;
+                    }
+                }
+                for (var j=0; j< $scope.asignadasLunes.length; j++) {
+                    if ($scope.asignadasLunes[j].hora == i) {
+                        $scope.actividadesLunes[i-8] = "HORARIO ASIGNADO INCIDENCIA " + $scope.asignadasLunes[j].idIncidencia;
+                        break;
+                    }
+                }
+            }
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasMartes.length; j++) {
+                    if ($scope.horasMartes[j].horaDeInicio == i) {
+                        $scope.actividadesMartes[i-8] = ($scope.horasMartes[j].actividad)
+                        break;
+                    }
+                }
+                for (var j=0; j< $scope.asignadasMartes.length; j++) {
+                    if ($scope.asignadasMartes[j].hora == i) {
+                        $scope.actividadesMartes[i-8] = "HORARIO ASIGNADO INCIDENCIA " + $scope.asignadasMartes[j].idIncidencia;
+                        break;
+                    }
+                }
+            }
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasMiercoles.length; j++) {
+                    if ($scope.horasMiercoles[j].horaDeInicio == i) {
+                        $scope.actividadesMiercoles[i-8] = ($scope.horasMiercoles[j].actividad)
+                        break;
+                    }
+                }
+                for (var j=0; j< $scope.asignadasMiercoles.length; j++) {
+                    if ($scope.asignadasMiercoles[j].hora == i) {
+                        $scope.actividadesMiercoles[i-8] = "HORARIO ASIGNADO INCIDENCIA " + $scope.asignadasMiercoles[j].idIncidencia;
+                        break;
+                    }
+                }
+            }
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasJueves.length; j++) {
+                    if ($scope.horasJueves[j].horaDeInicio == i) {
+                        $scope.actividadesJueves[i-8] = ($scope.horasJueves[j].actividad)
+                        break;
+                    }
+                }
+                for (var j=0; j< $scope.asignadasJueves.length; j++) {
+                    if ($scope.asignadasJueves[j].hora == i) {
+                        $scope.actividadesJueves[i-8] = "HORARIO ASIGNADO INCIDENCIA " + $scope.asignadasJueves[j].idIncidencia;
+                        break;
+                    }
+                }
+            }
+            for (var i = 8; i <= 20; i++) {
+                for (var j=0; j<  $scope.horasViernes.length; j++) {
+                    if ($scope.horasViernes[j].horaDeInicio == i) {
+                        $scope.actividadesViernes[i-8] = ($scope.horasViernes[j].actividad)
+                        break;
+                    }
+                }
+                for (var j=0; j< $scope.asignadasViernes.length; j++) {
+                    if ($scope.asignadasViernes[j].hora == i) {
+                        $scope.actividadesViernes[i-8] = "HORARIO ASIGNADO INCIDENCIA " + $scope.asignadasViernes[j].idIncidencia;
+                        break;
+                    }
+                }
+            }
+        };
+
+        var callBackAsignadas = function(data) {
+            for (var i = 0; i< data.length; i++) {
+                switch(data[i].dia) {
+                    case "Lunes":
+                        $scope.asignadasLunes.push(data[i]);
+                        break;
+                    case "Martes":
+                        $scope.asignadasMartes.push(data[i]);
+                        break;
+                    case "Miercoles":
+                        $scope.asignadasMiercoles.push(data[i]);
+                        break;
+                    case "Jueves":
+                        $scope.asignadasJueves.push(data[i]);
+                        break;
+                    case "Viernes":
+                        $scope.asignadasViernes.push(data[i]);
+                        break;
+                }
+            }
+
+            loadData();
+        };
+
+        var obtenerAsignadasDeEspacio = function() {
+            $scope.map.obtenerAsignadasDeEspacio($scope.incidencia.localizacion.idEspacio, callBackAsignadas);
+        };
+
+
+        var callBackHorarioSuccess = function(data) {
+            $scope.horasLunes = data.horario.horasLunes;
+            $scope.horasMartes = data.horario.horasMartes;
+            $scope.horasMiercoles= data.horario.horasMiercoles;
+            $scope.horasJueves = data.horario.horasJueves;
+            $scope.horasViernes = data.horario.horasViernes;
+
+            obtenerAsignadasDeEspacio();
+        };
+
+        var callBackHorarioFail = function() {};
+
+        $scope.map.getInfo($scope.incidencia.localizacion.idEspacio, callBackHorarioSuccess, callBackHorarioFail);
+
+        var callBackAsignada = function() {
+            $uibModalInstance.close();
+        };
+
+        $scope.asignar = function(dia, hora) {
+            $scope.map.asignarIncidencia($scope.idTrabajador, $scope.incidencia.id, dia, hora, callBackAsignada)
+        };
+
+        $scope.close = function () {
+            $uibModalInstance.close();
+        };
+
     });

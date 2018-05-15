@@ -10,7 +10,7 @@
                         <table class="table table-bordered table-striped table-hover">
                             <thead>
                             <tr class="table-head">
-                                <th class="col-md-9">Nombre</th>
+                                <th class="col-md-10">Nombre</th>
                                 <th class="col-md-1">Ver</th>
                                 <th class="col-md-1">Centrar</th>
                             </tr>
@@ -117,7 +117,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="incidencia in incidenciasUserBasico.finalizadas">
+                                    <tr ng-repeat="incidencia in incidenciasUserBasico.completadas">
                                         <th scope="row">{{incidencia.titulo}}</th>
                                         <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
                                         <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
@@ -180,7 +180,7 @@
                                         <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
                                         <td><button ng-click="aceptarIncidencia(incidencia)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span></button></td>
                                         <td><button ng-click="pedirModificarIncidencia(incidencia)" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                        <td><button ng-click="rechazarIncidencia(incidencia)" class="btn btn-error"><span class="glyphicon glyphicon-remove"></span></button></td>
+                                        <td><button ng-click="rechazarIncidencia(incidencia)" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button></td>
                                         <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
                                     </tr>
                                     </tbody>
@@ -209,6 +209,62 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="userType == 'Mantenimiento'">
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchIncidenciasGeneralesMantenimientoActive()">
+                        <h2>Incidencias</h2>
+                    </div>
+                    <div ng-show="mantenimientoGeneralesActive" class="panel-body">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="col-md-9">Nombre</th>
+                                <th class="col-md-1">Ver</th>
+                                <th class="col-md-1">Asignar</th>
+                                <th class="col-md-1">Centrar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="incidencia in incidenciasActivas">
+                                <th scope="row">{{incidencia.titulo}}</th>
+                                <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                <td><button ng-click="asignarIncidencia(incidencia)" class="btn btn-primary">Asignar</button></td>
+                                <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchIncidenciasAsignadasMantenimientoActive()">
+                        <h2>Mis incidencias asignadas</h2>
+                    </div>
+                    <div ng-show="mantenimientoAsignadasActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div class="panel panel-primary">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                <tr class="table-head">
+                                    <th class="col-md-8">Nombre</th>
+                                    <th class="col-md-1">Ver</th>
+                                    <th class="col-md-1">Desasignar</th>
+                                    <th class="col-md-1">Finalizar</th>
+                                    <th class="col-md-1">Centrar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="incidencia in incidenciasAsignadas">
+                                    <th scope="row">{{incidencia.titulo}}</th>
+                                    <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                    <td><button ng-click="desasignarIncidencia(incidencia)" class="btn btn-danger">Desasignar</button></td>
+                                    <td><button ng-click="finalizarIncidencia(incidencia)" class="btn btn-success">Finalizar</button></td>
+                                    <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -28,7 +28,7 @@ public class MapService {
   protected IncidenciaRepository incidenciaRepository;
 
   @RequestMapping(value = "/espacios", method = RequestMethod.GET)
-  public ResponseEntity<String> getInfo(HttpServletRequest request) {
+  public ResponseEntity<String> getInfoDeEspacio(HttpServletRequest request) {
     String id = request.getHeader("id");
     Espacio e = espacioRepository.findEspacioByID(id);
 

@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="modal-body" style="width: 100%; height: 100%">
-        <table class="table table-bordered table-striped table-hover">
+        <table ng-if="userType != 'Mantenimiento'" class="table table-bordered table-striped table-hover">
             <thead>
             <tr class="table-head">
                 <th class="col-md-10">Nombre</th>
@@ -22,6 +22,22 @@
             <tr ng-repeat="incidencia in incidenciasEspacio">
                 <th scope="row">{{incidencia.titulo}}</th>
                 <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <table ng-if="userType == 'Mantenimiento'" class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr class="table-head">
+                <th class="col-md-10">Nombre</th>
+                <th class="col-md-1">Ver</th>
+                <th class="col-md-1">Asignar</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="incidencia in incidenciasEspacio">
+                <th scope="row">{{incidencia.titulo}}</th>
+                <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                <td><button ng-click="asignarIncidencia(incidencia)" class="btn btn-success">Asignar</button></td>
             </tr>
             </tbody>
         </table>
