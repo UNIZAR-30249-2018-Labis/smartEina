@@ -106,16 +106,15 @@ public class IncidenceServiceTest {
             ids.add(id);
         }
 
-
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("worker1");
-        System.out.println(listaIncidencias.size());
-        listaIncidencias = incidenciaRepository.findAllIncidencias();
-
 
         for(int i = 0; i<ids.size(); i++) {
 
+
             Boolean existeInicidencia = false;
             for ( Incidencia inci : listaIncidencias) {
+
+
                 if (inci.getId().equals(ids.get(i))) {
                     existeInicidencia = true;
                 }
@@ -489,8 +488,9 @@ public class IncidenceServiceTest {
 
     @Test
     public void testCrearIncidencia() throws JSONException {
+
         ResponseEntity<String> response = incidenceService.crearIncidencia("titulo", "descripcion",
-                "idUsuarioTestCrearIncidencia", 33.3f, 33.3f, "plantaPrimera", "nombreEspacio");
+                "idUsuarioTestCrearIncidencia", 33.3f, 33.3f, "plantaPrimera", "CRE.1065.00.020");
 
         String expected = "\"Se ha añadido la incidencia\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -500,8 +500,6 @@ public class IncidenceServiceTest {
 
         Boolean incidenciaEncontrada = false;
         int i = 0;
-
-        System.out.println(listaIncidencias.size());
 
         while (!incidenciaEncontrada && i<listaIncidencias.size()) {
             if(listaIncidencias.get(i).getTitulo().equals("titulo") && listaIncidencias.get(i).getDesc().equals("descripcion")
