@@ -102,6 +102,7 @@ public class IncidenceServiceTest {
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
             Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","worker1",loc);
             System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
+            ResponseEntity<String> response = incidenceService.asignarIncidencia(id,"worker1","Martes", String.valueOf(9+i));
             ids.add(id);
         }
 
@@ -121,7 +122,11 @@ public class IncidenceServiceTest {
              System.out.println("Existe incidencia: "+existeInicidencia);
          }
 
-         for(String idIncidencia : ids) incidenciaRepository.deleteIncidenciaByID(idIncidencia);
+         for( String id : ids) {
+             CeldaMantenimiento celda = mantenimientoRepository.findCeldaMantenimientoByIDs("worker1", id);
+             mantenimientoRepository.deleteCeldaMantenimiento(celda);
+             incidenciaRepository.deleteIncidenciaByID(id);
+         }
     }
 
     @Test
