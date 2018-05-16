@@ -956,11 +956,15 @@ angular.module('smartEina')
             });
 
             modalAsignarMantenimiento.result.then(function () {
-                $scope.map.obtenerIncidenciasDeEspacioAceptadas($scope.idSelected, llenarIncidenciasEspacio);
+                if ($scope.userType == 'Mantenimiento') {
+                    $scope.map.obtenerIncidenciasDeEspacioAceptadas($scope.idSelected, llenarIncidenciasEspacio);
+                } else $scope.map.obtenerIncidenciasDeEspacio($scope.idSelected, llenarIncidenciasEspacio);
             });
         };
 
-        $scope.map.obtenerIncidenciasDeEspacioAceptadas($scope.idSelected, llenarIncidenciasEspacio);
+        if ($scope.userType == 'Mantenimiento') {
+            $scope.map.obtenerIncidenciasDeEspacioAceptadas($scope.idSelected, llenarIncidenciasEspacio);
+        } else $scope.map.obtenerIncidenciasDeEspacio($scope.idSelected, llenarIncidenciasEspacio);
 
         $scope.crearIncidencia = function() {
             var modalCrearIncidencia = $scope.uibModal.open({

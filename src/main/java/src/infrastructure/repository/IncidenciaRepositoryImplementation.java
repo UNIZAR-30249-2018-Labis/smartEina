@@ -303,7 +303,7 @@ public class IncidenciaRepositoryImplementation implements IncidenciaRepository 
       }
 
     } catch (EmptyResultDataAccessException e) {
-      return null;
+      return incidencias;
     }
     return incidencias;
   }

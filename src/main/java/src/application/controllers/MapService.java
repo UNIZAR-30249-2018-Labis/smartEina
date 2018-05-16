@@ -10,11 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import src.domain.Espacio;
-import src.domain.EspacioRepository;
-import src.domain.Horario;
-import src.domain.Incidencia;
-import src.domain.IncidenciaRepository;
+import src.domain.*;
 
 import java.util.ArrayList;
 
@@ -26,6 +22,9 @@ public class MapService {
 
   @Autowired
   protected IncidenciaRepository incidenciaRepository;
+
+  @Autowired
+  protected MantenimientoRepository mantenimientoRepository;
 
   @RequestMapping(value = "/espacios", method = RequestMethod.GET)
   public ResponseEntity<String> getInfoDeEspacio(HttpServletRequest request) {
@@ -40,7 +39,6 @@ public class MapService {
     } else {
       String json = gson.toJson(e);
       headers.add("Espacio", json);
-      System.out.println(json);
       return new ResponseEntity<String>("\"Exito obteniendo espacio\"", headers, HttpStatus.OK);
     }
   }
@@ -51,6 +49,22 @@ public class MapService {
     String dia = request.getParameter("dia");
     String hora = request.getParameter("hora");
     String actividad = request.getParameter("actividad");
+
+    ArrayList<CeldaMantenimiento> celdas = mantenimientoRepository.findAllCeldasMantenimientoByIdEspacio(idEspacio);
+
+    // Comprobamos si algun trabajador se habia asignado algo ahi
+    if (celdas.size() > 0) {
+      for (CeldaMantenimiento celda: celdas) {
+        if (celda.getHora() == Integer.parseInt(hora)) {
+          Incidencia incidencia = incidenciaRepository.findIncidenciaByID(celda.getIdIncidencia());
+          if (incidenciaRepository.asignadaToAceptada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ACEPTADA", incidencia.getIdUsuario(), "", incidencia.getLocalizacion()), celda.getIdTrabajador())) {
+            if (mantenimientoRepository.deleteCeldaMantenimiento(celda)) {
+              break;
+            } else return new ResponseEntity<String>("\"No se ha podido crear la hora\"", HttpStatus.BAD_REQUEST);
+          } return new ResponseEntity<String>("\"No se ha podido crear la hora\"", HttpStatus.BAD_REQUEST);
+        }
+      }
+    }
     espacioRepository.deleteActividadDelHorario(idEspacio,dia,Integer.parseInt(hora));
     if (!actividad.equals("")) {
       espacioRepository.addActividadAlHorario(idEspacio, dia, Integer.parseInt(hora), actividad);
@@ -67,7 +81,6 @@ public class MapService {
     String json = gson.toJson(h);
     HttpHeaders headers = new HttpHeaders();
     headers.add("Horario",json);
-    System.out.println(json);
     return new ResponseEntity<String>("\"Exito obteniendo el horario del espacio\"", headers, HttpStatus.OK);
   }
 

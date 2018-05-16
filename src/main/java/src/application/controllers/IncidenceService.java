@@ -189,12 +189,8 @@ public class IncidenceService {
     public ResponseEntity<String> desAsignarIncidencia(@RequestParam("idIncidencia") String idIncidencia,
                                                         @RequestParam("idTrabajador") String idTrabajador) {
 
-        System.out.println(idIncidencia + " " + idTrabajador);
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
         CeldaMantenimiento celda = mantenimientoRepository.findCeldaMantenimientoByIDs(idTrabajador, idIncidencia);
-
-        System.out.println("Incidencia: " + incidencia.toString());
-        System.out.println("CELDA " + celda.toString());
 
         if (incidenciaRepository.asignadaToAceptada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ACEPTADA", incidencia.getIdUsuario(), "", incidencia.getLocalizacion()), idTrabajador)) {
             if (mantenimientoRepository.deleteCeldaMantenimiento(celda)) {
