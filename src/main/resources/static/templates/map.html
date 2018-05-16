@@ -268,6 +268,78 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchAdministrarIncidenciasActive()">
+                        <h2>Administración de incidencias</h2>
+                    </div>
+                    <div ng-show="administrarIncidenciasActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" ng-click="allIncidencias.estado = 'creadas'">
+                                <h4>Creadas </h4>
+                            </div>
+                            <div class="panel-body" ng-show="allIncidencias.estado == 'creadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-7">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Aceptar</th>
+                                        <th class="col-md-1">Incompleta</th>
+                                        <th class="col-md-1">Rechazar</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in allIncidencias.creadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="aceptarIncidencia(incidencia)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span></button></td>
+                                        <td><button ng-click="pedirModificarIncidencia(incidencia)" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></button></td>
+                                        <td><button ng-click="rechazarIncidencia(incidencia)" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" ng-click="allIncidencias.estado = 'aceptadas'">
+                                <h4>Activas</h4>
+                            </div>
+                            <div class="panel-body" ng-show="allIncidencias.estado == 'aceptadas'">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="col-md-10">Nombre</th>
+                                        <th class="col-md-1">Ver</th>
+                                        <th class="col-md-1">Centrar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="incidencia in allIncidencias.aceptadas">
+                                        <th scope="row">{{incidencia.titulo}}</th>
+                                        <td><button ng-click="verIncidencia(incidencia)" class="btn btn-primary">Ver</button></td>
+                                        <td><button ng-click="centrarIncidencia(incidencia)" class="btn btn-primary"><span class="glyphicon glyphicon-map-marker"></span></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchBusquedaActive()">
+                        <h2>Búsqueda de espacios</h2>
+                    </div>
+                    <div ng-show="busquedaActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div ng-if="errorEnBusqueda" class="alert alert-danger feedbackMessages">
+                            <strong>&#10008</strong> {{msgErrorBusqueda}}
+                        </div>
+                        <label>Identificador del espacio:</label>
+                        <input type="text" class="form-control" ng-click="hideErrorBusquedaMessage()" ng-model="idEspacioBusqueda">
+                        <button ng-click="buscarEspacio(idEspacioBusqueda)" style="margin-top: 10px;" class="btn btn-primary">Buscar espacio</button>
+                    </div>
+                </div>
                 <button ng-click="verPlanDeTrabajo()" class="btn btn-primary">Ver plan de trabajo</button>
             </div>
         </div>

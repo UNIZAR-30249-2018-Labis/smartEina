@@ -447,6 +447,20 @@ angular.module('smartEina')
                 });
             },
 
+            obtenerDatosGeograficosEspacio: function (idEspacio, callBackExito, callBackFracaso) {
+                $http({
+                    method: 'GET',
+                    url: '/obtenerDatosGeograficosEspacio',
+                    headers: {
+                        'idEspacio': idEspacio
+                    }
+                }).success(function(data, status, headers) {
+                    callBackExito(JSON.parse(headers().datos))
+                }).error(function() {
+                    callBackFracaso();
+                });
+            },
+
             actualizarIncidencia: function (titulo, descripcion, idIncidencia, callBack) {
                 $http({
                     method: 'POST',

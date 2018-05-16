@@ -6,6 +6,10 @@ angular.module('smartEina')
         $scope.userType = auth.getLoggedType();
         $scope.userName = auth.getLoggedUsername();
 
+        $scope.msgErrorBusqueda = "";
+        $scope.errorEnBusqueda = false;
+        $scope.idEspacioBusqueda ="";
+
         $scope.horario = null;
 
         var plantaActual = 0;
@@ -17,6 +21,46 @@ angular.module('smartEina')
         $scope.administrarIncidenciasActive = false;
         $scope.mantenimientoGeneralesActive = false;
         $scope.mantenimientoAsignadasActive = false;
+        $scope.busquedaActive = false;
+
+        var hideErrorBusquedaMessage = function() {
+            $scope.msgErrorBusqueda = "";
+            $scope.errorEnBusqueda = false;
+        };
+
+        var callBackBusquedaEspacioExito = function(data) {
+            $scope.irPlanta(data[2]);
+            angular.extend($scope, {
+                cps: {
+                    lat: parseFloat(data[1]),
+                    lng: parseFloat(data[0]),
+                    zoom: 22
+                }
+            });
+            var idWFS = map.obtenerId($scope.layers.overlays.active.layerParams.layers, data[1], data[0]);
+
+            idWFS.then(function (result) {
+                var idCompleto = result;
+                map.getInfo(idCompleto, getInfoSuccess, getInfoError);
+
+                $scope.addMarker(parseFloat(data[1]), parseFloat(data[0]));
+            });
+        };
+
+        var callBackBusquedaEspacioFracaso = function() {
+            $scope.msgErrorBusqueda = "El espacio buscado no existe.";
+            $scope.errorEnBusqueda = true;
+        };
+
+        $scope.buscarEspacio = function(idBusqueda) {
+            console.log(idBusqueda);
+            if (idBusqueda == "") {
+                $scope.msgErrorBusqueda = "El campo del id del espacio no puede estar en blanco.";
+                $scope.errorEnBusqueda = true;
+            } else {
+                map.obtenerDatosGeograficosEspacio(idBusqueda, callBackBusquedaEspacioExito, callBackBusquedaEspacioFracaso);
+            }
+        };
 
         $scope.switchMisIncidenciasActive = function() {
           if ( $scope.misIncidenciasActive == false) {
@@ -46,6 +90,12 @@ angular.module('smartEina')
             if ($scope.mantenimientoAsignadasActive == false) {
                 $scope.mantenimientoAsignadasActive = true;
             } else $scope.mantenimientoAsignadasActive = false;
+        };
+
+        $scope.switchBusquedaActive = function() {
+            if ($scope.busquedaActive == false) {
+                $scope.busquedaActive = true;
+            } else $scope.busquedaActive = false;
         };
 
         $scope.incidenciasActivas = [];
@@ -1079,7 +1129,7 @@ angular.module('smartEina')
                 case 4: p = "04"; break;
             }
 
-            $scope.map.crearIncidencia($scope.titulo, $scope.descripcion, $scope.idUsuario,p, latitude, longitude, $scope.idEspacio, close);
+            $scope.map.crearIncidencia($scope.titulo, $scope.descripcion, $scope.idUsuario,p,  $scope.longitude , $scope.latitude,  $scope.idEspacio, close);
         };
 
         var crearFromCoords = function(data) {

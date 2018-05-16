@@ -97,4 +97,22 @@ public class MapService {
     headers.add("Coordenadas", json);
     return new ResponseEntity<String>("\"Exito obteniendo el id del espacio\"", headers, HttpStatus.OK);
   }
+
+  @RequestMapping(value = "/obtenerDatosGeograficosEspacio", method = RequestMethod.GET)
+  public ResponseEntity<String> buscarEspacioByCaracteristicas(HttpServletRequest request) {
+    String idEspacio = request.getHeader("idEspacio");
+    Espacio espacio = espacioRepository.findEspacioByID(idEspacio);
+
+    if (espacio == null) {
+      return new ResponseEntity<String>("\"El espacio buscado no existe\"",HttpStatus.BAD_REQUEST);
+    } else {
+      ArrayList<String> result = espacioRepository.getCoordenadasByID(idEspacio);
+      result.add(espacio.getPlanta());
+      Gson gson = new Gson();
+      String json = gson.toJson(result);
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("datos", json);
+      return new ResponseEntity<String>("\"Espacio encontrado\"", headers, HttpStatus.OK);
+    }
+  }
 }
