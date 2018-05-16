@@ -151,6 +151,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchBusquedaActive()">
+                        <h2>Búsqueda de espacios</h2>
+                    </div>
+                    <div ng-show="busquedaActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div ng-if="errorEnBusqueda" class="alert alert-danger feedbackMessages">
+                            <strong>&#10008</strong> {{msgErrorBusqueda}}
+                        </div>
+                        <label>Identificador del espacio:</label>
+                        <input type="text" class="form-control" ng-click="hideErrorBusquedaMessage()" ng-model="idEspacioBusqueda">
+                        <button ng-click="buscarEspacio(idEspacioBusqueda)" style="margin-top: 10px;" class="btn btn-primary">Buscar espacio</button>
+                    </div>
+                </div>
             </div>
             <div ng-if="userType == 'Administrador'">
                 <div class="panel panel-default">
@@ -210,6 +223,19 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ng-click="switchBusquedaActive()">
+                        <h2>Búsqueda de espacios</h2>
+                    </div>
+                    <div ng-show="busquedaActive" class="panel-body" style="max-height: 600px;overflow-y: scroll;">
+                        <div ng-if="errorEnBusqueda" class="alert alert-danger feedbackMessages">
+                            <strong>&#10008</strong> {{msgErrorBusqueda}}
+                        </div>
+                        <label>Identificador del espacio:</label>
+                        <input type="text" class="form-control" ng-click="hideErrorBusquedaMessage()" ng-model="idEspacioBusqueda">
+                        <button ng-click="buscarEspacio(idEspacioBusqueda)" style="margin-top: 10px;" class="btn btn-primary">Buscar espacio</button>
                     </div>
                 </div>
             </div>
