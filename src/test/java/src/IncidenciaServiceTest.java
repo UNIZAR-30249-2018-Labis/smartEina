@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import src.application.controllers.IncidenciaService;
+import src.application.controllers.IncidenceService;
 import src.domain.*;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
 
-public class IncidenciaServiceTest {
+public class IncidenceServiceTest {
 
     @Autowired
     protected IncidenciaRepository incidenciaRepository;
@@ -34,7 +34,7 @@ public class IncidenciaServiceTest {
     protected EspacioRepository espacioRepository;
 
     @Autowired
-    protected IncidenciaService incidenciaService;
+    protected IncidenceService incidenceService;
 
     @Test
     public void addIncidenciaTest() {
@@ -102,20 +102,19 @@ public class IncidenciaServiceTest {
             String id = incidenciaRepository.addIncidenciaTest(incidencia);
             Incidencia incidencia2 = new Incidencia(id ,"Test_trabajador" + i,"TEST_TRABAJADOR","PENDIENTE","2","worker1",loc);
             System.out.println(incidenciaRepository.aceptadaToAsignada(incidencia2));
-            ResponseEntity<String> response = incidenciaService.asignarIncidencia(id,"worker1","Martes", String.valueOf(9));
+            ResponseEntity<String> response = incidenceService.asignarIncidencia(id,"worker1","Martes", String.valueOf(9));
             ids.add(id);
         }
 
-
         ArrayList<Incidencia> listaIncidencias = incidenciaRepository.findAllIncidenciasByTrabajador("worker1");
-        System.out.println(listaIncidencias.size());
-        listaIncidencias = incidenciaRepository.findAllIncidencias();
-
 
         for(int i = 0; i<ids.size(); i++) {
 
+
             Boolean existeInicidencia = false;
             for ( Incidencia inci : listaIncidencias) {
+
+
                 if (inci.getId().equals(ids.get(i))) {
                     existeInicidencia = true;
                 }
@@ -180,7 +179,7 @@ public class IncidenciaServiceTest {
         espacioRepository.addActividadAlHorario(l.getIdEspacio(),"Viernes",12,"Actividad5");
 
         Incidencia in = incidenciaRepository.findIncidenciaByID(id);
-        Horario comparar = espacioRepository.findHorarioDeEspacioDeIncidencia(in.getLocalizacion().getIdEspacio());
+        Horario comparar = espacioRepository.horarioDeEspacioDeIncidencia(in.getLocalizacion().getIdEspacio());
         assertTrue(h.equals(comparar));
 
         espacioRepository.deleteActividadDelHorario(l.getIdEspacio(),"Lunes",8);
@@ -378,7 +377,7 @@ public class IncidenciaServiceTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idIncidencia")).thenReturn(idIncidencia);
 
-        ResponseEntity<String> response = incidenciaService.getIncidencia(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidencia(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -393,7 +392,7 @@ public class IncidenciaServiceTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idUser")).thenReturn("0");
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasUsuario(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasUsuario(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -406,7 +405,7 @@ public class IncidenciaServiceTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idTrabajador")).thenReturn("0");
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasTrabajador(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasTrabajador(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -418,7 +417,7 @@ public class IncidenciaServiceTest {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
-        ResponseEntity<String> response = incidenciaService.getAllIncidencias(mockRequest);
+        ResponseEntity<String> response = incidenceService.getAllIncidencias(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -432,7 +431,7 @@ public class IncidenciaServiceTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idEspacio")).thenReturn("0");
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasEspacio(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasEspacio(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -445,7 +444,7 @@ public class IncidenciaServiceTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idEspacio")).thenReturn("0");
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasEspacioAceptadas(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasEspacioAceptadas(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -456,7 +455,7 @@ public class IncidenciaServiceTest {
     public void testGetIncidenciasActivasYAsignadas() throws JSONException {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasActivasYAsignadas(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasActivasYAsignadas(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -468,7 +467,7 @@ public class IncidenciaServiceTest {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasActivas(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasActivas(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -480,7 +479,7 @@ public class IncidenciaServiceTest {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
-        ResponseEntity<String> response = incidenciaService.getIncidenciasCreadas(mockRequest);
+        ResponseEntity<String> response = incidenceService.getIncidenciasCreadas(mockRequest);
 
         String expected = "\"Exito obteniendo incidencias\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -489,8 +488,9 @@ public class IncidenciaServiceTest {
 
     @Test
     public void testCrearIncidencia() throws JSONException {
-        ResponseEntity<String> response = incidenciaService.crearIncidencia("titulo", "descripcion",
-                "idUsuarioTestCrearIncidencia", 33.3f, 33.3f, "plantaPrimera", "nombreEspacio");
+
+        ResponseEntity<String> response = incidenceService.crearIncidencia("titulo", "descripcion",
+                "idUsuarioTestCrearIncidencia", 33.3f, 33.3f, "plantaPrimera", "CRE.1065.00.020");
 
         String expected = "\"Se ha añadido la incidencia\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -500,8 +500,6 @@ public class IncidenciaServiceTest {
 
         Boolean incidenciaEncontrada = false;
         int i = 0;
-
-        System.out.println(listaIncidencias.size());
 
         while (!incidenciaEncontrada && i<listaIncidencias.size()) {
             if(listaIncidencias.get(i).getTitulo().equals("titulo") && listaIncidencias.get(i).getDesc().equals("descripcion")
@@ -523,7 +521,7 @@ public class IncidenciaServiceTest {
         Incidencia i = new Incidencia("01", "PruebaUpdateIncidenciaController", "desc", "PENDIENTE","prueba","worker1",l);
         String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
 
-        ResponseEntity<String> response = incidenciaService.updateIncidencia("TituloNuevo", "DescripcionNueva",
+        ResponseEntity<String> response = incidenceService.updateIncidencia("TituloNuevo", "DescripcionNueva",
                 idIncidencia);
 
         String expected = "\"Se ha modificado la incidencia correctamente\"";
@@ -543,7 +541,7 @@ public class IncidenciaServiceTest {
         System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
 
 
-        ResponseEntity<String> response = incidenciaService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
+        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
 
         String expected = "\"El estado de la incidencia ha sido actualizado y se ha creado la celda\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -564,9 +562,9 @@ public class IncidenciaServiceTest {
         System.out.println(incidenciaRepository.pendienteToAceptada(incidencia2));
 
 
-        ResponseEntity<String> response = incidenciaService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
+        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","11");
 
-        response = incidenciaService.desAsignarIncidencia(idIncidencia,"worker1");
+        response = incidenceService.desAsignarIncidencia(idIncidencia,"worker1");
 
         String expected = "\"El estado de la incidencia ha sido actualizado y la celda borrada\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
@@ -581,7 +579,7 @@ public class IncidenciaServiceTest {
         Incidencia i = new Incidencia("01", "PruebaPendientarIncidencia", "desc", "INCOMPLETA","prueba","worker1",l);
         String idIncidencia = incidenciaRepository.addIncidenciaTest(i);
 
-        ResponseEntity<String> response = incidenciaService.pendientarIncidencia(idIncidencia);
+        ResponseEntity<String> response = incidenceService.pendientarIncidencia(idIncidencia);
 
         String expected = "\"El estado de la incidencia ha sido actualizado\"";
         JSONAssert.assertEquals(expected, response.getBody(), false);
