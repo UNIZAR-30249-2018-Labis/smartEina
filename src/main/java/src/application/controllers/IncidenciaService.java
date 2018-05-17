@@ -180,7 +180,6 @@ public class IncidenciaService {
         if (incidencia.getEstado().equals("ASIGNADA")) {
             return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia, porque ya estaba asignada\"", HttpStatus.BAD_REQUEST);
         }
-
        if (incidenciaRepository.aceptadaToAsignada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ASIGNADA", incidencia.getIdUsuario(), idTrabajador, incidencia.getLocalizacion()))) {
            CeldaMantenimiento celda = new CeldaMantenimiento(incidencia.getLocalizacion().getIdEspacio(), idTrabajador, idIncidencia, dia, Integer.parseInt(hora));
            if (mantenimientoRepository.addCeldaMantenimiento(celda)) {
