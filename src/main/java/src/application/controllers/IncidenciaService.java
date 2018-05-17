@@ -21,7 +21,7 @@ import src.infrastructure.repository.MantenimientoRepositoryImplementation;
 import java.util.ArrayList;
 
 @RestController
-public class IncidenceService {
+public class IncidenciaService {
 
     @Autowired
     protected IncidenciaRepository incidenciaRepository;
@@ -177,6 +177,10 @@ public class IncidenceService {
                                                     @RequestParam("hora") String hora) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
 
+        if (incidencia.getEstado().equals("ASIGNADA")) {
+            return new ResponseEntity<String>("\"No se ha podido actualizar el estado de la incidencia, porque ya estaba asignada\"", HttpStatus.BAD_REQUEST);
+        }
+
        if (incidenciaRepository.aceptadaToAsignada(new Incidencia(incidencia.getId(),incidencia.getTitulo(), incidencia.getDesc(), "ASIGNADA", incidencia.getIdUsuario(), idTrabajador, incidencia.getLocalizacion()))) {
            CeldaMantenimiento celda = new CeldaMantenimiento(incidencia.getLocalizacion().getIdEspacio(), idTrabajador, idIncidencia, dia, Integer.parseInt(hora));
            if (mantenimientoRepository.addCeldaMantenimiento(celda)) {
@@ -200,7 +204,7 @@ public class IncidenceService {
     }
 
     @RequestMapping(value = "/finalizarIncidencia", method = RequestMethod.POST)
-    public ResponseEntity<String> terminarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
+    public ResponseEntity<String> finalizarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         Incidencia incidencia = incidenciaRepository.findIncidenciaByID(idIncidencia);
         CeldaMantenimiento celda = mantenimientoRepository.findCeldaMantenimientoByIDs(incidencia.getIdTrabajador(), idIncidencia);
 

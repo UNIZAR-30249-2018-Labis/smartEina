@@ -1,8 +1,5 @@
 package src.application.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.gson.Gson;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +73,7 @@ public class MapService {
   public ResponseEntity<String> verHorarioDeEspacio(HttpServletRequest request) {
     String idIncidencia = request.getHeader("idIncidencia");
     Incidencia i = incidenciaRepository.findIncidenciaByID(idIncidencia);
-    Horario h = espacioRepository.horarioDeEspacioDeIncidencia(i.getLocalizacion().getIdEspacio());
+    Horario h = espacioRepository.findHorarioDeEspacioDeIncidencia(i.getLocalizacion().getIdEspacio());
     Gson gson = new Gson();
     String json = gson.toJson(h);
     HttpHeaders headers = new HttpHeaders();
@@ -99,7 +96,7 @@ public class MapService {
   }
 
   @RequestMapping(value = "/obtenerDatosGeograficosEspacio", method = RequestMethod.GET)
-  public ResponseEntity<String> buscarEspacioByCaracteristicas(HttpServletRequest request) {
+  public ResponseEntity<String> obtenerDatosGeograficosEspacio(HttpServletRequest request) {
     String idEspacio = request.getHeader("idEspacio");
     Espacio espacio = espacioRepository.findEspacioByID(idEspacio);
 

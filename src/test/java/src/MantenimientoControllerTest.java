@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import src.application.controllers.IncidenceService;
+import src.application.controllers.IncidenciaService;
 import src.application.controllers.MantenimientoService;
 import src.domain.*;
 
@@ -34,7 +34,7 @@ public class MantenimientoControllerTest {
     protected EspacioRepository espacioRepository;
 
     @Autowired
-    protected IncidenceService incidenceService;
+    protected IncidenciaService incidenciaService;
 
     @Test
     public void testGetIncidenciaMantenimiento() throws JSONException {
@@ -50,7 +50,7 @@ public class MantenimientoControllerTest {
         Mockito.when(mockRequest.getHeader("idIncidencia")).thenReturn(idIncidencia);
         Mockito.when(mockRequest.getHeader("idTrabajador")).thenReturn("worker1");
 
-        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","20");
+        ResponseEntity<String> response = incidenciaService.asignarIncidencia(idIncidencia,"worker1","Lunes","20");
 
         response = mantenimientoService.getIncidenciaMantenimiento(mockRequest);
 
@@ -73,7 +73,7 @@ public class MantenimientoControllerTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idTrabajador")).thenReturn("worker1");
 
-        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","16");
+        ResponseEntity<String> response = incidenciaService.asignarIncidencia(idIncidencia,"worker1","Lunes","16");
 
         response = mantenimientoService.getAllIncidenciasMantenimientoTrabajador(mockRequest);
 
@@ -96,7 +96,7 @@ public class MantenimientoControllerTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("idEspacio")).thenReturn("10");
 
-        ResponseEntity<String> response = incidenceService.asignarIncidencia(idIncidencia,"worker1","Lunes","10");
+        ResponseEntity<String> response = incidenciaService.asignarIncidencia(idIncidencia,"worker1","Lunes","10");
 
         response = mantenimientoService.getAllIncidenciasMantenimientoEspacio(mockRequest);
 

@@ -29,21 +29,25 @@ angular.module('smartEina')
         };
 
         var callBackBusquedaEspacioExito = function(data) {
+            console.log(data);
+            console.log(data[0]);
+            console.log(data[1]);
+            console.log(data[2]);
             $scope.irPlanta(data[2]);
             angular.extend($scope, {
                 cps: {
-                    lat: parseFloat(data[1]),
-                    lng: parseFloat(data[0]),
+                    lat: data[1],
+                    lng: data[2],
                     zoom: 22
                 }
             });
-            var idWFS = map.obtenerId($scope.layers.overlays.active.layerParams.layers, data[1], data[0]);
+            var idWFS = map.obtenerId($scope.layers.overlays.active.layerParams.layers, data[1], data[2]);
 
             idWFS.then(function (result) {
                 var idCompleto = result;
                 map.getInfo(idCompleto, getInfoSuccess, getInfoError);
 
-                $scope.addMarker(parseFloat(data[1]), parseFloat(data[0]));
+                $scope.addMarker(data[1], data[2]);
             });
         };
 

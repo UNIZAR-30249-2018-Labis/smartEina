@@ -158,7 +158,7 @@ public class EspacioRepositoryImplementation implements EspacioRepository {
     }
 
     @Override
-    public Horario horarioDeEspacioDeIncidencia(String idEspacio) {
+    public Horario findHorarioDeEspacioDeIncidencia(String idEspacio) {
         return findHorario(idEspacio);
     }
 

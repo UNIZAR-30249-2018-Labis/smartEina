@@ -8,7 +8,7 @@ public interface IncidenciaRepository {
 
   ArrayList<Incidencia> findAllIncidenciasByTrabajador(String idTrabajador);
 
-  ArrayList<Incidencia> findAllIncidenciasByUser(String username);
+  ArrayList<Incidencia> findAllIncidenciasByUser(String idUser);
 
   ArrayList<Incidencia> findAllIncidencias();
 
